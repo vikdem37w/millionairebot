@@ -11,7 +11,8 @@ import asyncio
 import json
 import random
 import time
-#git testing comment
+import psycopg2
+
 load_dotenv()
 token=os.getenv("BOT")
 dp = Dispatcher()
@@ -21,26 +22,19 @@ if token:
 questions = json.load(open("whocanbeamillionairetho.json"))
 last_interaction = time.time()
 online = False
-loop = asyncio.new_event_loop()
+# conn = psycopg2.connect(
+#     host=os.getenv("DB_HOST"),
+#     database=os.getenv("DB_NAME"),
+#     user=os.getenv("DB_USER"),
+#     password=os.getenv("DB_PASSWORD"),
+#     port=5432,
+# )
+# cursor = conn.cursor()
 
 class Form(StatesGroup):
-    q1 = State()
-    q2 = State()
-    q3 = State()
-    q4 = State()
-    q5 = State()
-    q6 = State()
-    q7 = State()
-    q8 = State()
-    q9 = State()
-    q10 = State()
-    q11 = State()
-    q12 = State()
-    q13 = State()
-    q14 = State()
-    q15 = State()
+    q = State()
 qid = 0
-qlist = [Form.q1, Form.q2, Form.q3, Form.q4, Form.q5, Form.q6, Form.q7, Form.q8, Form.q9, Form.q10, Form.q11, Form.q12, Form.q13, Form.q14, Form.q15]
+qlist = Form.q
 reward = [100, 200, 300, 500, 1000, 2000, 4000, 8000, 16000, 32000, 64000, 125000, 250000, 500000, 1000000]
 
 async def timeout(callback: types.CallbackQuery, state: FSMContext):
@@ -82,7 +76,7 @@ async def begin_again_callback(callback: types.CallbackQuery, state: FSMContext)
         online = True
         await asyncio.sleep(1)
         questions = json.load(open("whocanbeamillionairetho.json"))
-        await q_handler(callback, state, Form.q1)
+        await q_handler(callback, state, Form.q)
 
 async def q_handler(callback: types.CallbackQuery, state: FSMContext, qx: State) -> None:
     if callback.message:
@@ -131,7 +125,7 @@ async def start_callback(callback: types.CallbackQuery, state: FSMContext) -> No
         await callback.message.answer("Alright! Starting off strong with Round 1")
         round = 1
         await asyncio.sleep(1)
-        await q_handler(callback, state, Form.q1)
+        await q_handler(callback, state, Form.q)
         
 response = [
     "Good, you have 100₴, time for the next question",
@@ -151,7 +145,7 @@ response = [
 ]
 
 round = 1
-@form_router.callback_query(StateFilter(*qlist))
+@form_router.callback_query(StateFilter(Form.q))
 async def q_response(callback: types.CallbackQuery, state: FSMContext) -> None:
     global qlist, round
     if callback.message:
@@ -177,7 +171,7 @@ async def q_response(callback: types.CallbackQuery, state: FSMContext) -> None:
             if round < 15:
                 round += 1
                 await asyncio.sleep(1)
-                await q_handler(callback, state, qlist[round-1])
+                await q_handler(callback, state, Form.q)
         else:
             if round == 14:
                 await callback.message.answer("A smaller lot it is.")
