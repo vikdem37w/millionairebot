@@ -12,7 +12,7 @@ import json
 import random
 import time
 import psycopg2
-
+#finish files, db, and use middleware
 load_dotenv()
 token=os.getenv("BOT")
 dp = Dispatcher()
@@ -27,7 +27,7 @@ online = False
 #     database=os.getenv("DB_NAME"),
 #     user=os.getenv("DB_USER"),
 #     password=os.getenv("DB_PASSWORD"),
-#     port=5432,
+#     port=5432
 # )
 # cursor = conn.cursor()
 
@@ -49,7 +49,7 @@ async def timeout(callback: types.CallbackQuery, state: FSMContext):
             if callback.message:
                 await callback.message.answer(text="It's been a while, no? \nTo upkeep server availability, we're forced to end your session prematurely. \nPreviously earned money is lost. \nTo begin anew, press the button below.", reply_markup=builder.as_markup())
             online = False
-        await asyncio.sleep(0.1)
+        await asyncio.sleep(1)
 
 @dp.message(CommandStart())
 async def cmd_start(msg: types.Message, state: FSMContext) -> None:
