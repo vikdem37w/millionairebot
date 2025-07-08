@@ -12,6 +12,7 @@ import json
 import random
 import time
 import psycopg2
+import datetime as dt
 #finish files, db, and use middleware
 load_dotenv()
 token=os.getenv("BOT")
@@ -22,14 +23,14 @@ if token:
 questions = json.load(open("whocanbeamillionairetho.json"))
 last_interaction = time.time()
 online = False
-# conn = psycopg2.connect(
-#     host=os.getenv("DB_HOST"),
-#     database=os.getenv("DB_NAME"),
-#     user=os.getenv("DB_USER"),
-#     password=os.getenv("DB_PASSWORD"),
-#     port=5432
-# )
-# cursor = conn.cursor()
+conn = psycopg2.connect(
+    host=os.getenv("DB_HOST"),
+    database=os.getenv("DB_NAME"),
+    user=os.getenv("DB_USER"),
+    password=os.getenv("DB_PASSWORD"),
+    port=5432
+)
+cursor = conn.cursor()
 
 class Form(StatesGroup):
     q = State()
@@ -40,9 +41,11 @@ reward = [100, 200, 300, 500, 1000, 2000, 4000, 8000, 16000, 32000, 64000, 12500
 async def timeout(callback: types.CallbackQuery, state: FSMContext):
     global last_interaction
     global online
-    while online:
+    print (await state.get_state(), online)
+    while await state.get_state() == Form.q:
         now = time.time()
-        if now - last_interaction > 600:
+        print(now - last_interaction)
+        if now - last_interaction > 6:
             await state.clear()
             builder = InlineKeyboardBuilder()
             builder.button(text=f"Begin anew", callback_data="start")
@@ -59,21 +62,35 @@ async def cmd_start(msg: types.Message, state: FSMContext) -> None:
     )
     builder = InlineKeyboardBuilder()
     builder.button(text=f"Begin", callback_data="start")
-    await msg.answer(text=f"Greetings, contestant! \nWelcome to this barely legal and totally not copyright infringing game show! \nIf you don't know the rules, type /rules \nPress the button below to begin.", reply_markup=builder.as_markup())
+    chat_id = msg.chat.id
+    if msg.from_user:
+        username = msg.from_user.username
+    
+    await msg.answer(text=f"Greetings, {username}! \nWelcome to this barely legal and totally not copyright infringing game show! \nIf you don't know the rules, type /rules \nPress the button below to begin.", reply_markup=builder.as_markup())
+    cursor.execute("SELECT name FROM admin")
+    if (username,) in cursor.fetchall():
+        admin = "admin"
+    else:
+        admin = "normal"
+    cursor.execute(f"SELECT name FROM users WHERE name = '{username}'")
+    if not cursor.fetchall():
+        cursor.execute(f"INSERT INTO users VALUES ('{username}', {chat_id}, '{admin}', '{dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S")}')")
+        print(f"{username} added at {dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S")}")
+        conn.commit()
 
 @dp.callback_query(F.data == "begin_again", StateFilter(None))
 async def begin_again_callback(callback: types.CallbackQuery, state: FSMContext) -> None:
     if callback.message:
         global online
         global last_interaction
-        online = True
+        await state.set_state(Form.q)
         asyncio.create_task(timeout(callback, state))
         last_interaction = time.time()
         global questions
         global round
         round = 1
         await callback.message.answer("Another round, then? Good luck!")
-        online = True
+        await state.set_state(Form.q)
         await asyncio.sleep(1)
         questions = json.load(open("whocanbeamillionairetho.json"))
         await q_handler(callback, state, Form.q)
@@ -119,7 +136,7 @@ async def start_callback(callback: types.CallbackQuery, state: FSMContext) -> No
         global round
         global online
         global last_interaction
-        online = True
+        await state.set_state(Form.q)
         asyncio.create_task(timeout(callback, state))
         last_interaction = time.time()
         await callback.message.answer("Alright! Starting off strong with Round 1")
