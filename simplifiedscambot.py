@@ -40,18 +40,15 @@ reward = [100, 200, 300, 500, 1000, 2000, 4000, 8000, 16000, 32000, 64000, 12500
 
 async def timeout(callback: types.CallbackQuery, state: FSMContext):
     global last_interaction
-    global online
-    print (await state.get_state(), online)
     while await state.get_state() == Form.q:
         now = time.time()
-        print(now - last_interaction)
-        if now - last_interaction > 6:
+        if now - last_interaction > 600:
             await state.clear()
             builder = InlineKeyboardBuilder()
             builder.button(text=f"Begin anew", callback_data="start")
             if callback.message:
                 await callback.message.answer(text="It's been a while, no? \nTo upkeep server availability, we're forced to end your session prematurely. \nPreviously earned money is lost. \nTo begin anew, press the button below.", reply_markup=builder.as_markup())
-            online = False
+            await state.set_state(None)
         await asyncio.sleep(1)
 
 @dp.message(CommandStart())
@@ -75,13 +72,13 @@ async def cmd_start(msg: types.Message, state: FSMContext) -> None:
     cursor.execute(f"SELECT name FROM users WHERE name = '{username}'")
     if not cursor.fetchall():
         cursor.execute(f"INSERT INTO users VALUES ('{username}', {chat_id}, '{admin}', '{dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S")}')")
-        print(f"{username} added at {dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S")}")
+        # print(f"{username} added at {dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S")}")
         conn.commit()
 
 @dp.callback_query(F.data == "begin_again", StateFilter(None))
 async def begin_again_callback(callback: types.CallbackQuery, state: FSMContext) -> None:
     if callback.message:
-        global online
+        
         global last_interaction
         await state.set_state(Form.q)
         asyncio.create_task(timeout(callback, state))
@@ -110,13 +107,10 @@ async def q_handler(callback: types.CallbackQuery, state: FSMContext, qx: State)
         await callback.message.answer(text=f"Round {round}; Reward - {reward[round-1]}₴ \n{questions[qid]['question']}", reply_markup=builder.as_markup())
         await state.update_data(answer=questions[qid]["answer"])
         questions.pop(qid)
-        await state.set_state(qx)
 
 async def loss_response(callback: types.CallbackQuery, state: FSMContext, qindex: int) -> None:
     if callback.message:
         q = f"q{qindex}"
-        global online
-        online = False
         await state.clear()
         builder = InlineKeyboardBuilder()
         builder.button(text=f"Try again", callback_data="begin_again")
@@ -134,7 +128,7 @@ async def loss_response(callback: types.CallbackQuery, state: FSMContext, qindex
 async def start_callback(callback: types.CallbackQuery, state: FSMContext) -> None:
     if callback.message:
         global round
-        global online
+        
         global last_interaction
         await state.set_state(Form.q)
         asyncio.create_task(timeout(callback, state))
@@ -177,8 +171,7 @@ async def q_response(callback: types.CallbackQuery, state: FSMContext) -> None:
             if round == 13:
                 await asyncio.sleep(2)
             elif round == 15:
-                global online
-                online = False
+                await state.clear()
                 await callback.message.answer("YOU DID IT! A great sum of a 1 000 000₴ is now in your hands. Congrats!")
                 builder = InlineKeyboardBuilder()
                 builder.button(text=f"Get another million", callback_data="begin_again")
