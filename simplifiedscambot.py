@@ -20,9 +20,8 @@ dp = Dispatcher()
 form_router = Router()
 if token:
     bot = Bot(token)
-questions = json.load(open("whocanbeamillionairetho.json"))
+
 last_interaction = time.time()
-online = False
 conn = psycopg2.connect(
     host=os.getenv("DB_HOST"),
     database=os.getenv("DB_NAME"),
@@ -31,7 +30,10 @@ conn = psycopg2.connect(
     port=5432
 )
 cursor = conn.cursor()
+cursor.execute("SELECT * FROM questions")
 
+questions = cursor.fetchall()
+print(questions[0][0])
 class Form(StatesGroup):
     q = State()
 qid = 0
@@ -62,7 +64,6 @@ async def cmd_start(msg: types.Message, state: FSMContext) -> None:
     chat_id = msg.chat.id
     if msg.from_user:
         username = msg.from_user.username
-    
     await msg.answer(text=f"Greetings, {username}! \nWelcome to this barely legal and totally not copyright infringing game show! \nIf you don't know the rules, type /rules \nPress the button below to begin.", reply_markup=builder.as_markup())
     cursor.execute("SELECT name FROM admin")
     if (username,) in cursor.fetchall():
@@ -78,7 +79,6 @@ async def cmd_start(msg: types.Message, state: FSMContext) -> None:
 @dp.callback_query(F.data == "begin_again", StateFilter(None))
 async def begin_again_callback(callback: types.CallbackQuery, state: FSMContext) -> None:
     if callback.message:
-        
         global last_interaction
         await state.set_state(Form.q)
         asyncio.create_task(timeout(callback, state))
@@ -87,9 +87,10 @@ async def begin_again_callback(callback: types.CallbackQuery, state: FSMContext)
         global round
         round = 1
         await callback.message.answer("Another round, then? Good luck!")
-        await state.set_state(Form.q)
         await asyncio.sleep(1)
-        questions = json.load(open("whocanbeamillionairetho.json"))
+        cursor.execute("SELECT * FROM questions")
+
+        questions = cursor.fetchall()
         await q_handler(callback, state, Form.q)
 
 async def q_handler(callback: types.CallbackQuery, state: FSMContext, qx: State) -> None:
@@ -101,11 +102,12 @@ async def q_handler(callback: types.CallbackQuery, state: FSMContext, qx: State)
         builder = InlineKeyboardBuilder()
         scramble = list(range(4))
         random.shuffle(scramble)
+
         for i in scramble:
-            builder.button(text=f"{questions[qid]['options'][i]}", callback_data=f"{questions[qid]['options'][i]}")
+            builder.button(text=f"{questions[qid][1][i]}", callback_data=f"{questions[qid][1][i]}")
         builder.adjust(2, 2)
-        await callback.message.answer(text=f"Round {round}; Reward - {reward[round-1]}₴ \n{questions[qid]['question']}", reply_markup=builder.as_markup())
-        await state.update_data(answer=questions[qid]["answer"])
+        await callback.message.answer(text=f"Round {round}; Reward - {reward[round-1]}₴ \n{questions[qid][0]}", reply_markup=builder.as_markup())
+        await state.update_data(answer=questions[qid][2])
         questions.pop(qid)
 
 async def loss_response(callback: types.CallbackQuery, state: FSMContext, qindex: int) -> None:
@@ -121,6 +123,10 @@ async def loss_response(callback: types.CallbackQuery, state: FSMContext, qindex
         elif qindex > 5:
             await asyncio.sleep(1)
             await callback.message.answer(text="But, as a nice gesture, we'll let you keep 1 000₴")
+        if callback.from_user:
+            username = callback.from_user.username
+        cursor.execute(f"INSERT INTO stats VALUES ('{username}', {qindex-1}, '{'loss'}', '{dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S")}')")
+        conn.commit()
         await asyncio.sleep(1)
         await callback.message.answer(text=f"Want to try again?", reply_markup=builder.as_markup())
 
@@ -173,6 +179,10 @@ async def q_response(callback: types.CallbackQuery, state: FSMContext) -> None:
             elif round == 15:
                 await state.clear()
                 await callback.message.answer("YOU DID IT! A great sum of a 1 000 000₴ is now in your hands. Congrats!")
+                if callback.from_user:
+                    username = callback.from_user.username
+                cursor.execute(f"INSERT INTO stats VALUES ('{username}', {15}, '{'win'}', '{dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S")}')")
+                conn.commit()
                 builder = InlineKeyboardBuilder()
                 builder.button(text=f"Get another million", callback_data="begin_again")
                 await asyncio.sleep(1)
