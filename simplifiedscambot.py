@@ -20,7 +20,6 @@ dp = Dispatcher()
 form_router = Router()
 if token:
     bot = Bot(token)
-
 last_interaction = time.time()
 conn = psycopg2.connect(
     host=os.getenv("DB_HOST"),
@@ -31,7 +30,6 @@ conn = psycopg2.connect(
 )
 cursor = conn.cursor()
 cursor.execute("SELECT * FROM questions")
-
 questions = cursor.fetchall()
 print(questions[0][0])
 class Form(StatesGroup):
@@ -89,7 +87,6 @@ async def begin_again_callback(callback: types.CallbackQuery, state: FSMContext)
         await callback.message.answer("Another round, then? Good luck!")
         await asyncio.sleep(1)
         cursor.execute("SELECT * FROM questions")
-
         questions = cursor.fetchall()
         await q_handler(callback, state, Form.q)
 
@@ -102,7 +99,6 @@ async def q_handler(callback: types.CallbackQuery, state: FSMContext, qx: State)
         builder = InlineKeyboardBuilder()
         scramble = list(range(4))
         random.shuffle(scramble)
-
         for i in scramble:
             builder.button(text=f"{questions[qid][1][i]}", callback_data=f"{questions[qid][1][i]}")
         builder.adjust(2, 2)
@@ -175,7 +171,7 @@ async def q_response(callback: types.CallbackQuery, state: FSMContext) -> None:
             if round <= 14:
                 await callback.message.answer(text=response[round-1])
             if round == 13:
-                await asyncio.sleep(2)
+                await asyncio.sleep(3)
             elif round == 15:
                 await state.clear()
                 await callback.message.answer("YOU DID IT! A great sum of a 1 000 000₴ is now in your hands. Congrats!")
