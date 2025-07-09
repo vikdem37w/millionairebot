@@ -90,7 +90,6 @@ async def begin_again_callback(callback: types.CallbackQuery, state: FSMContext)
         global last_interaction
         await state.set_state(Form.q)
         asyncio.create_task(timeout(callback, state))
-        # await bot.delete_message(callback.message.chat.id, callback.message.message_id)
         last_interaction = time.time()
         global questions
         global round
@@ -104,7 +103,6 @@ async def begin_again_callback(callback: types.CallbackQuery, state: FSMContext)
         await asyncio.sleep(1)
         cursor.execute("SELECT * FROM questions")
         questions = cursor.fetchall()
-        # await bot.delete_message(callback.message.chat.id, callback.message.message_id)
         await q_handler(callback, state, Form.q)
 
 async def q_handler(callback: types.CallbackQuery, state: FSMContext, qx: State) -> None:
@@ -150,7 +148,6 @@ async def start_callback(callback: types.CallbackQuery, state: FSMContext) -> No
     if callback.message:
         global round
         global last_interaction
-        # await bot.delete_message(callback.message.chat.id, callback.message.message_id)
         await state.set_state(Form.q)
         asyncio.create_task(timeout(callback, state))
         last_interaction = time.time()
@@ -162,7 +159,6 @@ async def start_callback(callback: types.CallbackQuery, state: FSMContext) -> No
         await callback.message.answer("Alright, starting off with Round 1!", reply_markup=builder.as_markup())
         round = 1
         await asyncio.sleep(1)
-        # await bot.delete_message(callback.message.chat.id, callback.message.message_id)
         await q_handler(callback, state, Form.q)
         
 response = [
@@ -200,7 +196,7 @@ async def fiftyfifty(msg: types.Message, state: FSMContext) -> None:
         await msg.answer(text="50/50 lifeline used, options split even!", reply_markup=builder.as_markup())
     else:
         await msg.answer(text="Oh no, you can't use 50/50 again, sweetie, lifelines are one-time-use.")
-
+#Heads-up: AI-related lifelines cannot be tested due to my broke API account (even though I've recieved ChatGPT Plus, preposterous!)
 @dp.message(F.text == "Phone a friend", StateFilter(Form.q))
 async def phoneafriend(msg: types.Message, state: FSMContext) -> None:
     data = await state.get_data()
@@ -216,8 +212,7 @@ async def phoneafriend(msg: types.Message, state: FSMContext) -> None:
             )
             await msg.answer(text=f"And they responded with: {response.output_text}")
         except:
-            await msg.answer(text="Line's dead, your dear friend did not pick up. Lifeline's refunded.")
-            await state.update_data(phoneafriendused=False)
+            await msg.answer(text="Line's dead, your dear friend did not pick up. They got something better to do, yet you have to pick an answer anyway.")
     else:
         await msg.answer(text="Oh no, you can't call your friend again, honey, lifelines are one-time-use.")
 
@@ -226,7 +221,7 @@ async def asktheaudience(msg: types.Message, state: FSMContext) -> None:
     data = await state.get_data()
     await bot.delete_message(msg.chat.id, msg.message_id)
     if not data["asktheaudienceused"]:
-        await state.update_data(phoneafriendused=True)
+        await state.update_data(asktheaudienceused=True)
         await msg.answer(text="Ask the audience lifeline used! Voting in progress...")
         await asyncio.sleep(5)
         try:
@@ -236,7 +231,7 @@ async def asktheaudience(msg: types.Message, state: FSMContext) -> None:
             )
             await msg.answer(text=f"And the votes are in: {response.output_text}")
         except:
-            await msg.answer(text="Our vote counting system ran into an issue, so the votes have been invalidated. Lifeline's refunded.")
+            await msg.answer(text="Our vote counting system ran into an issue, so the votes have been invalidated. You'll have to answer without the audience's help")
             await state.update_data(asktheaudienceused=False)
     else:
         await msg.answer(text="Oh, the audience is recovering from the last vote! You can't ask them for another!")
@@ -280,7 +275,6 @@ async def q_response(callback: types.CallbackQuery, state: FSMContext) -> None:
             if round < 15:
                 round += 1
                 await asyncio.sleep(2)
-                # await bot.delete_message(callback.message.chat.id, callback.message.message_id)
                 await q_handler(callback, state, Form.q)
         else:
             if round == 14:
