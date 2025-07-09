@@ -223,8 +223,12 @@ async def leaderboard_handler(msg: types.Message) -> None:
 
 @dp.message(Command("addquestion"))
 async def addquestion(msg: types.Message, state: FSMContext) -> None:
-    await state.set_state(Form.addq)
-    await msg.answer(text="Enter the question:")
+    cursor.execute("SELECT name FROM admin")
+    if msg.from_user and (msg.from_user.username,) in cursor.fetchall():
+        await state.set_state(Form.addq)
+        await msg.answer(text="Enter the question:")
+    else:
+        await msg.answer(text="It seems you're not a part of the staff, and thus cannot access the question database.")
 
 @form_router.message(Form.addq)
 async def addoption1(msg: types.Message, state: FSMContext) -> None:
