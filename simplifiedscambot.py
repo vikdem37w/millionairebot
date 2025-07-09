@@ -1,12 +1,13 @@
 from aiogram import Bot, Dispatcher, types, F, Router
-from aiogram.types import FSInputFile
-from aiogram.utils.keyboard import InlineKeyboardBuilder
+from aiogram.types import FSInputFile, ReplyKeyboardRemove
+from aiogram.utils.keyboard import InlineKeyboardBuilder, ReplyKeyboardBuilder
 from aiogram.filters import CommandStart, Command
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.filters.state import StateFilter
 from aiogram.methods import DeleteMessage
 from dotenv import load_dotenv
+from openai import OpenAI
 import os
 import asyncio 
 import random
@@ -16,6 +17,7 @@ import datetime as dt
 #finish files, db, and use middleware
 load_dotenv()
 token=os.getenv("BOT")
+aitoken = os.getenv("AI")
 dp = Dispatcher()
 form_router = Router()
 if token:
@@ -28,6 +30,7 @@ conn = psycopg2.connect(
     password=os.getenv("DB_PASSWORD"),
     port=5432
 )
+client = OpenAI(api_key=aitoken)
 cursor = conn.cursor()
 cursor.execute("SELECT * FROM questions")
 questions = cursor.fetchall()
@@ -87,14 +90,21 @@ async def begin_again_callback(callback: types.CallbackQuery, state: FSMContext)
         global last_interaction
         await state.set_state(Form.q)
         asyncio.create_task(timeout(callback, state))
+        # await bot.delete_message(callback.message.chat.id, callback.message.message_id)
         last_interaction = time.time()
         global questions
         global round
         round = 1
-        await callback.message.answer("Another round, then? Good luck!")
+        builder = ReplyKeyboardBuilder()
+        builder.button(text="50/50")
+        builder.button(text="Phone a friend")
+        builder.button(text="Ask the audience")
+        await state.update_data(fiftyfiftyused=False, phoneafriendused=False, asktheaudienceused=False)
+        await callback.message.answer("Another round, then? Good luck!", reply_markup=builder.as_markup())
         await asyncio.sleep(1)
         cursor.execute("SELECT * FROM questions")
         questions = cursor.fetchall()
+        # await bot.delete_message(callback.message.chat.id, callback.message.message_id)
         await q_handler(callback, state, Form.q)
 
 async def q_handler(callback: types.CallbackQuery, state: FSMContext, qx: State) -> None:
@@ -102,7 +112,7 @@ async def q_handler(callback: types.CallbackQuery, state: FSMContext, qx: State)
         global round
         await state.set_state(qx)
         global qid
-        # await bot.delete_message(callback.message.chat.id, callback.message.message_id)
+        await bot.delete_message(callback.message.chat.id, callback.message.message_id)
         qid = random.randint(0, len(questions)-1)
         builder = InlineKeyboardBuilder()
         scramble = list(range(4))
@@ -111,17 +121,17 @@ async def q_handler(callback: types.CallbackQuery, state: FSMContext, qx: State)
             builder.button(text=f"{questions[qid][1][i]}", callback_data=f"{questions[qid][1][i]}")
         builder.adjust(2, 2)
         await callback.message.answer(text=f"Round {round}; Reward - {reward[round]}₴ \n{questions[qid][0]}", reply_markup=builder.as_markup())
-        await state.update_data(answer=questions[qid][2])
+        await state.update_data(answer=questions[qid][2], question=questions[qid][0], options=questions[qid][1])
         questions.pop(qid)
 
 async def loss_response(callback: types.CallbackQuery, state: FSMContext, qindex: int) -> None:
     if callback.message:
         q = f"q{qindex}"
         await state.clear()
-        # await bot.delete_message(callback.message.chat.id, callback.message.message_id)
+        await bot.delete_message(callback.message.chat.id, callback.message.message_id)
         builder = InlineKeyboardBuilder()
         builder.button(text=f"Try again", callback_data="begin_again")
-        await callback.message.answer(text=f"You lost, you got to question {qindex}")
+        await callback.message.answer(text=f"You lost, you got to question {qindex}", reply_markup=ReplyKeyboardRemove())
         if qindex > 10:
             await asyncio.sleep(1)
             await callback.message.answer(text="But, since you performed well enough, we'll let you keep 32k₴")
@@ -144,9 +154,15 @@ async def start_callback(callback: types.CallbackQuery, state: FSMContext) -> No
         await state.set_state(Form.q)
         asyncio.create_task(timeout(callback, state))
         last_interaction = time.time()
-        await callback.message.answer("Alright, starting off with Round 1!")
+        builder = ReplyKeyboardBuilder()
+        builder.button(text="50/50")
+        builder.button(text="Phone a friend")
+        builder.button(text="Ask the audience")
+        await state.update_data(fiftyfiftyused=False, phoneafriendused=False, asktheaudienceused=False)
+        await callback.message.answer("Alright, starting off with Round 1!", reply_markup=builder.as_markup())
         round = 1
         await asyncio.sleep(1)
+        # await bot.delete_message(callback.message.chat.id, callback.message.message_id)
         await q_handler(callback, state, Form.q)
         
 response = [
@@ -166,6 +182,65 @@ response = [
     "Last question! If you win, you get a MILLION! Yet, if you lose, you get... 32k₴. Round 15, hit it!"
 ]
 
+@dp.message(F.text == "50/50", StateFilter(Form.q))
+async def fiftyfifty(msg: types.Message, state: FSMContext) -> None:
+    data = await state.get_data()
+    await bot.delete_message(msg.chat.id, msg.message_id)
+    if not data["fiftyfiftyused"]:
+        await state.update_data(fiftyfiftyused=True)
+        builder = InlineKeyboardBuilder()
+        for i in range(2):
+            if data["options"][0] != data["answer"]:
+                data["options"].pop(0)
+            else:
+                data["options"].pop(1)
+        builder.button(text=f"{data['options'][0]}", callback_data=f"{data['options'][0]}")
+        builder.button(text=f"{data['options'][1]}", callback_data=f"{data['options'][1]}")
+        builder.adjust(1, 1)
+        await msg.answer(text="50/50 lifeline used, options split even!", reply_markup=builder.as_markup())
+    else:
+        await msg.answer(text="Oh no, you can't use 50/50 again, sweetie, lifelines are one-time-use.")
+
+@dp.message(F.text == "Phone a friend", StateFilter(Form.q))
+async def phoneafriend(msg: types.Message, state: FSMContext) -> None:
+    data = await state.get_data()
+    await bot.delete_message(msg.chat.id, msg.message_id)
+    if not data["phoneafriendused"]:
+        await state.update_data(phoneafriendused=True)
+        await msg.answer(text="Phone a friend lifeline used! Calling your friend...")
+        await asyncio.sleep(5)
+        try:
+            response = client.responses.create(
+                model="gpt-4o-mini",
+                input=f"Your friend has just used a Phone a friend lifeline on a game show, and has decided to call you. The question is: {data['question']}. The options are: {data['options']}. Respond with a short answer, giving them a hint on the answer."
+            )
+            await msg.answer(text=f"And they responded with: {response.output_text}")
+        except:
+            await msg.answer(text="Line's dead, your dear friend did not pick up. Lifeline's refunded.")
+            await state.update_data(phoneafriendused=False)
+    else:
+        await msg.answer(text="Oh no, you can't call your friend again, honey, lifelines are one-time-use.")
+
+@dp.message(F.text == "Ask the audience", StateFilter(Form.q))
+async def asktheaudience(msg: types.Message, state: FSMContext) -> None:
+    data = await state.get_data()
+    await bot.delete_message(msg.chat.id, msg.message_id)
+    if not data["asktheaudienceused"]:
+        await state.update_data(phoneafriendused=True)
+        await msg.answer(text="Ask the audience lifeline used! Voting in progress...")
+        await asyncio.sleep(5)
+        try:
+            response = client.responses.create(
+                model="gpt-4o-mini",
+                input=f"A contestant has used an Ask the audience lifeline on a game show, and the audience is voting on the answer. The question is: {data['question']}. The options are: {data['options']}. Respond with the options and the votes, example: Moth: 40%, Roach: 10%, Fly:30%, Japanese beetle: 20%."
+            )
+            await msg.answer(text=f"And the votes are in: {response.output_text}")
+        except:
+            await msg.answer(text="Our vote counting system ran into an issue, so the votes have been invalidated. Lifeline's refunded.")
+            await state.update_data(asktheaudienceused=False)
+    else:
+        await msg.answer(text="Oh, the audience is recovering from the last vote! You can't ask them for another!")
+
 round = 1
 @form_router.callback_query(StateFilter(Form.q))
 async def q_response(callback: types.CallbackQuery, state: FSMContext) -> None:
@@ -178,12 +253,21 @@ async def q_response(callback: types.CallbackQuery, state: FSMContext) -> None:
 
         if callback.data == answer:
             if round <= 14:
-                await callback.message.answer(text=response[round-1])
+                builder = ReplyKeyboardBuilder()
+                data = await state.get_data()
+                if not data["fiftyfiftyused"]:
+                    builder.button(text="50/50")
+                if not data["phoneafriendused"]:
+                    builder.button(text="Phone a friend")
+                if not data["asktheaudienceused"]:
+                    builder.button(text="Ask the audience")
+                builder.adjust(1, 1)
+                await callback.message.answer(text=response[round-1], reply_markup=builder.as_markup())
             if round == 13:
                 await asyncio.sleep(3)
             elif round == 15:
                 await state.clear()
-                await callback.message.answer("YOU DID IT! A great sum of a 1 000 000₴ is now in your hands. Congrats!")
+                await callback.message.answer("YOU DID IT! A great sum of a 1 000 000₴ is now in your hands. Congrats!", reply_markup=ReplyKeyboardRemove())
                 if callback.from_user:
                     username = callback.from_user.username
                 cursor.execute(f"INSERT INTO stats VALUES ('{username}', {15}, '{'win'}', '{dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S")}')")
@@ -228,7 +312,7 @@ async def addquestion(msg: types.Message, state: FSMContext) -> None:
         await state.set_state(Form.addq)
         await msg.answer(text="Enter the question:")
     else:
-        await msg.answer(text="It seems you're not a part of the staff, and thus cannot access the question database.")
+        await msg.answer(text="I'd love to help you add a question, yet, for security reasons, only staff have permission to do so. Maybe consider filling out a job application at the front desk?")
 
 @form_router.message(Form.addq)
 async def addoption1(msg: types.Message, state: FSMContext) -> None:
@@ -299,15 +383,15 @@ async def photo_handler(msg: types.Message) -> None:
     await msg.answer(text=photo_response[random.randint(0, 2)])
     last_interaction = time.time()
 
-@dp.message(F.text, StateFilter(None))
-@dp.message(F.text, StateFilter(Form.q))
+@dp.message(F.text, StateFilter(None), ~F.text.in_(["50/50", "Phone a friend", "Ask the audience"]))
+@dp.message(F.text, StateFilter(Form.q), ~F.text.in_(["50/50", "Phone a friend", "Ask the audience"]))
 async def text_handler(msg: types.Message) -> None:
     global last_interaction
     await msg.answer(text=text_response[random.randint(0, 2)])
     last_interaction = time.time()
 
-@dp.message(StateFilter(None))
-@dp.message(StateFilter(Form.q))
+@dp.message(StateFilter(None), ~F.text.in_(["50/50", "Phone a friend", "Ask the audience"]))
+@dp.message(StateFilter(Form.q), ~F.text.in_(["50/50", "Phone a friend", "Ask the audience"]))
 async def nodata_handler(msg: types.Message) -> None:
     global last_interaction
     await msg.answer(text=nodata_response[random.randint(0, 2)])
