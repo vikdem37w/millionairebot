@@ -102,7 +102,7 @@ async def q_handler(callback: types.CallbackQuery, state: FSMContext, qx: State)
         global round
         await state.set_state(qx)
         global qid
-        await bot.delete_message(callback.message.chat.id, callback.message.message_id)
+        # await bot.delete_message(callback.message.chat.id, callback.message.message_id)
         qid = random.randint(0, len(questions)-1)
         builder = InlineKeyboardBuilder()
         scramble = list(range(4))
@@ -118,7 +118,7 @@ async def loss_response(callback: types.CallbackQuery, state: FSMContext, qindex
     if callback.message:
         q = f"q{qindex}"
         await state.clear()
-        await bot.delete_message(callback.message.chat.id, callback.message.message_id)
+        # await bot.delete_message(callback.message.chat.id, callback.message.message_id)
         builder = InlineKeyboardBuilder()
         builder.button(text=f"Try again", callback_data="begin_again")
         await callback.message.answer(text=f"You lost, you got to question {qindex}")
@@ -140,7 +140,7 @@ async def start_callback(callback: types.CallbackQuery, state: FSMContext) -> No
     if callback.message:
         global round
         global last_interaction
-        await bot.delete_message(callback.message.chat.id, callback.message.message_id)
+        # await bot.delete_message(callback.message.chat.id, callback.message.message_id)
         await state.set_state(Form.q)
         asyncio.create_task(timeout(callback, state))
         last_interaction = time.time()
@@ -196,7 +196,7 @@ async def q_response(callback: types.CallbackQuery, state: FSMContext) -> None:
             if round < 15:
                 round += 1
                 await asyncio.sleep(2)
-                await bot.delete_message(callback.message.chat.id, callback.message.message_id)
+                # await bot.delete_message(callback.message.chat.id, callback.message.message_id)
                 await q_handler(callback, state, Form.q)
         else:
             if round == 14:
