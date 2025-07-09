@@ -5,10 +5,10 @@ from aiogram.filters import CommandStart, Command
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.filters.state import StateFilter
+from aiogram.methods import DeleteMessage
 from dotenv import load_dotenv
 import os
 import asyncio 
-import json
 import random
 import time
 import psycopg2
@@ -31,12 +31,17 @@ conn = psycopg2.connect(
 cursor = conn.cursor()
 cursor.execute("SELECT * FROM questions")
 questions = cursor.fetchall()
-print(questions[0][0])
 class Form(StatesGroup):
     q = State()
+    addq = State()
+    addo1 = State()
+    addo2 = State()
+    addo3 = State()
+    addo4 = State()
+    adda = State()
 qid = 0
 qlist = Form.q
-reward = [100, 200, 300, 500, 1000, 2000, 4000, 8000, 16000, 32000, 64000, 125000, 250000, 500000, 1000000]
+reward = [0, 100, 200, 300, 500, 1000, 2000, 4000, 8000, 16000, 32000, 64000, 125000, 250000, 500000, 1000000]
 
 async def timeout(callback: types.CallbackQuery, state: FSMContext):
     global last_interaction
@@ -62,7 +67,7 @@ async def cmd_start(msg: types.Message, state: FSMContext) -> None:
     chat_id = msg.chat.id
     if msg.from_user:
         username = msg.from_user.username
-    await msg.answer(text=f"Greetings, {username}! \nWelcome to this barely legal and totally not copyright infringing game show! \nIf you don't know the rules, type /rules \nPress the button below to begin.", reply_markup=builder.as_markup())
+    await msg.answer(text=f"Greetings, {username}! \nWelcome to this barely legal and totally not copyright infringing game show! \nIf you don't know the rules, type /rules \nTo view the leaderboard, type /leaderboard \nPress the button below to begin.", reply_markup=builder.as_markup())
     cursor.execute("SELECT name FROM admin")
     if (username,) in cursor.fetchall():
         admin = "admin"
@@ -73,6 +78,8 @@ async def cmd_start(msg: types.Message, state: FSMContext) -> None:
         cursor.execute(f"INSERT INTO users VALUES ('{username}', {chat_id}, '{admin}', '{dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S")}')")
         # print(f"{username} added at {dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S")}")
         conn.commit()
+    if admin == "admin":
+        await msg.answer(text="Oh, we have some staffmen here. Just a reminder, you can add questions via /addquestion.")
 
 @dp.callback_query(F.data == "begin_again", StateFilter(None))
 async def begin_again_callback(callback: types.CallbackQuery, state: FSMContext) -> None:
@@ -95,6 +102,7 @@ async def q_handler(callback: types.CallbackQuery, state: FSMContext, qx: State)
         global round
         await state.set_state(qx)
         global qid
+        await bot.delete_message(callback.message.chat.id, callback.message.message_id)
         qid = random.randint(0, len(questions)-1)
         builder = InlineKeyboardBuilder()
         scramble = list(range(4))
@@ -102,7 +110,7 @@ async def q_handler(callback: types.CallbackQuery, state: FSMContext, qx: State)
         for i in scramble:
             builder.button(text=f"{questions[qid][1][i]}", callback_data=f"{questions[qid][1][i]}")
         builder.adjust(2, 2)
-        await callback.message.answer(text=f"Round {round}; Reward - {reward[round-1]}₴ \n{questions[qid][0]}", reply_markup=builder.as_markup())
+        await callback.message.answer(text=f"Round {round}; Reward - {reward[round]}₴ \n{questions[qid][0]}", reply_markup=builder.as_markup())
         await state.update_data(answer=questions[qid][2])
         questions.pop(qid)
 
@@ -110,6 +118,7 @@ async def loss_response(callback: types.CallbackQuery, state: FSMContext, qindex
     if callback.message:
         q = f"q{qindex}"
         await state.clear()
+        await bot.delete_message(callback.message.chat.id, callback.message.message_id)
         builder = InlineKeyboardBuilder()
         builder.button(text=f"Try again", callback_data="begin_again")
         await callback.message.answer(text=f"You lost, you got to question {qindex}")
@@ -130,12 +139,12 @@ async def loss_response(callback: types.CallbackQuery, state: FSMContext, qindex
 async def start_callback(callback: types.CallbackQuery, state: FSMContext) -> None:
     if callback.message:
         global round
-        
         global last_interaction
+        await bot.delete_message(callback.message.chat.id, callback.message.message_id)
         await state.set_state(Form.q)
         asyncio.create_task(timeout(callback, state))
         last_interaction = time.time()
-        await callback.message.answer("Alright! Starting off strong with Round 1")
+        await callback.message.answer("Alright, starting off with Round 1!")
         round = 1
         await asyncio.sleep(1)
         await q_handler(callback, state, Form.q)
@@ -186,7 +195,8 @@ async def q_response(callback: types.CallbackQuery, state: FSMContext) -> None:
                 await state.clear()
             if round < 15:
                 round += 1
-                await asyncio.sleep(1)
+                await asyncio.sleep(2)
+                await bot.delete_message(callback.message.chat.id, callback.message.message_id)
                 await q_handler(callback, state, Form.q)
         else:
             if round == 14:
@@ -200,7 +210,69 @@ async def q_response(callback: types.CallbackQuery, state: FSMContext) -> None:
 
 @dp.message(Command("rules"))
 async def rules_handler(msg: types.Message) -> None:
-    await msg.answer(text="Rules are simple: \n — Answer up to 15 questions \n — Questions have 4 options, where only one is correct \n — If you answer correctly, you move on to the next round \n — If you don't, you lose and get a certain amount of money, depending on which round you lost on: \n     — nothing if you lost on rounds 1-5\n     — 1000₴ on rounds 6-10\n     — 32k₴ on rounds 11-15\n — There are 15 rounds total; if you pass all 15, you get a million ₴.\n — Also, there's a 10 minute timeout timer,which could be reset by pressing a button or saying anything, after which your session is removed and kept money is lost, so don't take too long! (not implemented yet)")
+    await msg.answer(text="Rules are simple: \n — Answer up to 15 questions \n — Questions have 4 options, where only one is correct \n — If you answer correctly, you move on to the next round \n — If you don't, you lose and get a certain amount of money, depending on which round you lost on: \n     — nothing if you lost on rounds 1-5\n     — 1000₴ on rounds 6-10\n     — 32k₴ on rounds 11-15\n — There are 15 rounds total; if you pass all 15, you get a million ₴.\n — Also, there's a 10 minute timeout timer (which could be reset by pressing a button, typing or sending anything) after which your session is removed and kept money is lost, so don't leave the show early!")
+
+@dp.message(Command("leaderboard"))
+async def leaderboard_handler(msg: types.Message) -> None:
+    cursor.execute("SELECT * FROM stats ORDER BY correctcount DESC LIMIT 10")
+    leaderboard = cursor.fetchall()
+    leaderoutput = ["Leaderboard: \n"]
+    for i in range(len(leaderboard)):
+        leaderoutput.append(f"{i+1}. {leaderboard[i][0]} {"won" if leaderboard[i][2] == "win" else "lost"} {reward[leaderboard[i][1]]}₴ on {leaderboard[i][3].strftime("%b %d %H:%M")}")
+    await msg.answer(text="\n".join(leaderoutput))
+
+@dp.message(Command("addquestion"))
+async def addquestion(msg: types.Message, state: FSMContext) -> None:
+    await state.set_state(Form.addq)
+    await msg.answer(text="Enter the question:")
+
+@form_router.message(Form.addq)
+async def addoption1(msg: types.Message, state: FSMContext) -> None:
+    await state.update_data(question=msg.text)
+    await state.set_state(Form.addo1)
+    await msg.answer(text="Enter the first option:")
+
+@form_router.message(Form.addo1)
+async def addoption2(msg: types.Message, state: FSMContext) -> None:
+    await state.update_data(option1=msg.text)
+    await state.set_state(Form.addo2)
+    await msg.answer(text="Enter the second option:")
+
+@form_router.message(Form.addo2)
+async def addoption3(msg: types.Message, state: FSMContext) -> None:
+    await state.update_data(option2=msg.text)
+    await state.set_state(Form.addo3)
+    await msg.answer(text="Enter the third option:")
+
+@form_router.message(Form.addo3)
+async def addoption4(msg: types.Message, state: FSMContext) -> None:
+    await state.update_data(option3=msg.text)
+    await state.set_state(Form.addo4)
+    await msg.answer(text="Enter the fourth option:")
+
+@form_router.message(Form.addo4)
+async def addanswer(msg: types.Message, state: FSMContext) -> None:
+    await state.update_data(option4=msg.text)
+    await state.set_state(Form.adda)
+    data = await state.get_data()
+    builder = InlineKeyboardBuilder()
+    for i in range(4):
+        builder.button(text=f"{data[f'option{i+1}']}", callback_data=f"{data[f'option{i+1}']}")
+    builder.adjust(2, 2)
+    await msg.answer(text="Select an answer:", reply_markup=builder.as_markup())
+
+@form_router.callback_query(Form.adda)
+async def finishquestion(callback: types.CallbackQuery, state: FSMContext) -> None:
+    if callback.message:
+        await state.update_data(answer=callback.data)
+        data = await state.get_data()
+        cursor.execute(f"INSERT INTO questions (question, options, answer) VALUES (%s, %s, %s)", (data["question"], [data["option1"], data["option2"], data["option3"], data["option4"]], data["answer"]))
+        conn.commit()
+        builder = InlineKeyboardBuilder()
+        builder.button(text="Start", callback_data="start")
+        await callback.message.answer(text="Question added. Click here to start the game.", reply_markup=builder.as_markup())
+        await state.clear()
+
 photo_response = [
     "That's... one beautiful picture, but this is not an art gallery, this is a game show! Now, please, answer.",
     "Since when could you send pictures? To a game show host no less?",
@@ -223,13 +295,15 @@ async def photo_handler(msg: types.Message) -> None:
     await msg.answer(text=photo_response[random.randint(0, 2)])
     last_interaction = time.time()
 
-@dp.message(F.text)
+@dp.message(F.text, StateFilter(None))
+@dp.message(F.text, StateFilter(Form.q))
 async def text_handler(msg: types.Message) -> None:
     global last_interaction
     await msg.answer(text=text_response[random.randint(0, 2)])
     last_interaction = time.time()
 
-@dp.message()
+@dp.message(StateFilter(None))
+@dp.message(StateFilter(Form.q))
 async def nodata_handler(msg: types.Message) -> None:
     global last_interaction
     await msg.answer(text=nodata_response[random.randint(0, 2)])
