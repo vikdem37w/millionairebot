@@ -14,7 +14,7 @@ import random
 import time
 import psycopg2
 import datetime as dt
-#finish files, db, and use middleware
+
 load_dotenv()
 token=os.getenv("BOT")
 aitoken = os.getenv("AI")
@@ -74,7 +74,7 @@ async def cmd_start(msg: types.Message, state: FSMContext) -> None:
     global photo, greeting
     photo = await bot.send_photo(
         chat_id=msg.chat.id,
-        photo=FSInputFile("cantaloupe.jpg") #until i get a proper photo, this atrocity shall plague the prod
+        photo=FSInputFile("wwtbam.jpg")
     )
     builder = InlineKeyboardBuilder()
     builder.button(text=f"Begin", callback_data="start")
@@ -90,7 +90,6 @@ async def cmd_start(msg: types.Message, state: FSMContext) -> None:
     cursor.execute(f"SELECT name FROM users WHERE name = '{username}'")
     if not cursor.fetchall():
         cursor.execute(f"INSERT INTO users VALUES ('{username}', {chat_id}, '{admin}', '{dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S")}')")
-        # print(f"{username} added at {dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S")}")
         conn.commit()
     if admin == "admin":
         admintxt = await msg.answer(text="Oh, we have some staffmen here. Just a reminder, you can add questions via /addquestion.")
@@ -183,7 +182,7 @@ async def start_callback(callback: types.CallbackQuery, state: FSMContext) -> No
         flavor = await callback.message.answer("Alright, starting off with Round 1!")
         round = 1
         await asyncio.sleep(0.5)
-        lifelinetxt = await callback.message.answer(text="Don't forget your lifelines!", reply_markup=builder.as_markup()) #crappy text
+        lifelinetxt = await callback.message.answer(text="Remember to use your lifelines, as you won't get a star sticker for not using them!", reply_markup=builder.as_markup())
         await state.update_data(lifelinetxt=lifelinetxt)
         await asyncio.sleep(0.5)
         await q_handler(callback, state, Form.q)
