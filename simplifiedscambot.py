@@ -55,7 +55,8 @@ async def timeout(callback: types.CallbackQuery, state: FSMContext):
             builder = InlineKeyboardBuilder()
             builder.button(text=f"Begin anew", callback_data="start")
             if callback.message:
-                await callback.message.answer(text="It's been a while, no? \nTo upkeep server availability, we're forced to end your session prematurely. \nPreviously earned money is lost. \nTo begin anew, press the button below.", reply_markup=builder.as_markup())
+                await callback.message.answer(text="It's been a while, no?", reply_markup=ReplyKeyboardRemove())
+                await callback.message.answer(text="To upkeep server availability, we're forced to end your session prematurely. \nPreviously earned money is lost. \nTo begin anew, press the button below.", reply_markup=builder.as_markup())
             await state.set_state(None)
         await asyncio.sleep(1)
 
@@ -196,7 +197,7 @@ async def fiftyfifty(msg: types.Message, state: FSMContext) -> None:
         await msg.answer(text="50/50 lifeline used, options split even!", reply_markup=builder.as_markup())
     else:
         await msg.answer(text="Oh no, you can't use 50/50 again, sweetie, lifelines are one-time-use.")
-#Heads-up: AI-related lifelines cannot be tested due to my broke API account (even though I've recieved ChatGPT Plus, preposterous!)
+
 @dp.message(F.text == "Phone a friend", StateFilter(Form.q))
 async def phoneafriend(msg: types.Message, state: FSMContext) -> None:
     data = await state.get_data()
@@ -207,12 +208,12 @@ async def phoneafriend(msg: types.Message, state: FSMContext) -> None:
         await asyncio.sleep(5)
         try:
             response = client.responses.create(
-                model="gpt-4o-mini",
-                input=f"Your friend has just used a Phone a friend lifeline on a game show, and has decided to call you. The question is: {data['question']}. The options are: {data['options']}. Respond with a short answer, giving them a hint on the answer."
+                model="gpt-3.5-turbo",
+                input=f"Your friend has just used a Phone a friend lifeline on a game show, and has decided to call you. The question is: {data['question']}. The options are: {data['options']}. Respond with a short answer, giving them some information on the answer without saying the answer outright. The answer must be helpful and help eliminate at least one option, with the answer only revealed with enough context known by the contestant to answer the question."
             )
             await msg.answer(text=f"And they responded with: {response.output_text}")
-        except:
-            await msg.answer(text="Line's dead, your dear friend did not pick up. They got something better to do, yet you have to pick an answer anyway.")
+        except Exception as e:
+            await msg.answer(text="Line's dead, your dear friend did not pick up. They got something better to do, I guess.")
     else:
         await msg.answer(text="Oh no, you can't call your friend again, honey, lifelines are one-time-use.")
 
@@ -226,13 +227,13 @@ async def asktheaudience(msg: types.Message, state: FSMContext) -> None:
         await asyncio.sleep(5)
         try:
             response = client.responses.create(
-                model="gpt-4o-mini",
+                model="gpt-3.5-turbo",
                 input=f"A contestant has used an Ask the audience lifeline on a game show, and the audience is voting on the answer. The question is: {data['question']}. The options are: {data['options']}. Respond with the options and the votes, example: Moth: 40%, Roach: 10%, Fly:30%, Japanese beetle: 20%."
             )
+            
             await msg.answer(text=f"And the votes are in: {response.output_text}")
-        except:
+        except Exception as e:
             await msg.answer(text="Our vote counting system ran into an issue, so the votes have been invalidated. You'll have to answer without the audience's help")
-            await state.update_data(asktheaudienceused=False)
     else:
         await msg.answer(text="Oh, the audience is recovering from the last vote! You can't ask them for another!")
 
@@ -256,8 +257,10 @@ async def q_response(callback: types.CallbackQuery, state: FSMContext) -> None:
                     builder.button(text="Phone a friend")
                 if not data["asktheaudienceused"]:
                     builder.button(text="Ask the audience")
-                builder.adjust(1, 1)
-                await callback.message.answer(text=response[round-1], reply_markup=builder.as_markup())
+                if data["fiftyfiftyused"] and data["phoneafriendused"] and data["asktheaudienceused"]:
+                    await callback.message.answer(text=response[round-1], reply_markup=ReplyKeyboardRemove())
+                else:
+                    await callback.message.answer(text=response[round-1], reply_markup=builder.as_markup())
             if round == 13:
                 await asyncio.sleep(3)
             elif round == 15:
@@ -288,7 +291,7 @@ async def q_response(callback: types.CallbackQuery, state: FSMContext) -> None:
 
 @dp.message(Command("rules"))
 async def rules_handler(msg: types.Message) -> None:
-    await msg.answer(text="Rules are simple: \n — Answer up to 15 questions \n — Questions have 4 options, where only one is correct \n — If you answer correctly, you move on to the next round \n — If you don't, you lose and get a certain amount of money, depending on which round you lost on: \n     — nothing if you lost on rounds 1-5\n     — 1000₴ on rounds 6-10\n     — 32k₴ on rounds 11-15\n — There are 15 rounds total; if you pass all 15, you get a million ₴.\n — Also, there's a 10 minute timeout timer (which could be reset by pressing a button, typing or sending anything) after which your session is removed and kept money is lost, so don't leave the show early!")
+    await msg.answer(text="Rules are simple: \n — Answer up to 15 questions \n — Questions have 4 options, where only one is correct \n — If you answer correctly, you move on to the next round \n — If you don't, you lose and get a certain amount of money, depending on which round you lost on: \n     — nothing if you lost on rounds 1-5\n     — 1000₴ on rounds 6-10\n     — 32k₴ on rounds 11-15\n — There are 15 rounds total; if you pass all 15, you get a million ₴.\n — Also, there's a 10 minute timeout timer (which could be reset by pressing a button, typing or sending anything) after which your session is removed and kept money is lost, so don't leave the show early! \n — Also, you have access to lifelines: 50/50, Phone a friend, and Ask the audience. They're one-time-use, though, so don't spend them willy-nilly!")
 
 @dp.message(Command("leaderboard"))
 async def leaderboard_handler(msg: types.Message) -> None:
