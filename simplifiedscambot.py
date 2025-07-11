@@ -31,8 +31,6 @@ conn = psycopg2.connect(
 )
 client = OpenAI(api_key=aitoken)
 cursor = conn.cursor()
-# cursor.execute("SELECT * FROM questions")
-# questions = cursor.fetchall()
 class Form(StatesGroup):
     q = State()
     addq = State()
