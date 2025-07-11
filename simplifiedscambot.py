@@ -5,7 +5,6 @@ from aiogram.filters import CommandStart, Command
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.filters.state import StateFilter
-from aiogram.methods import DeleteMessage
 from dotenv import load_dotenv
 from openai import OpenAI
 import os
@@ -32,8 +31,8 @@ conn = psycopg2.connect(
 )
 client = OpenAI(api_key=aitoken)
 cursor = conn.cursor()
-cursor.execute("SELECT * FROM questions")
-questions = cursor.fetchall()
+# cursor.execute("SELECT * FROM questions")
+# questions = cursor.fetchall()
 class Form(StatesGroup):
     q = State()
     addq = State()
@@ -110,12 +109,17 @@ async def begin_again(callback: types.CallbackQuery, state: FSMContext) -> None:
         builder.button(text="50/50")
         builder.button(text="Phone a friend")
         builder.button(text="Ask the audience")
-        await state.update_data(fiftyfiftyused=False, phoneafriendused=False, asktheaudienceused=False)
-        await callback.message.answer("Another round, then? Good luck!", reply_markup=builder.as_markup())
-        await asyncio.sleep(1)
+        await state.update_data(fiftyfiftyused=False, phoneafriendused=False, asktheaudienceused=False, phonetxt=None, audiencetxt=None)
+        flavor = await callback.message.answer("Another round, then? Good luck!", reply_markup=builder.as_markup())
+        await asyncio.sleep(0.5)
+        lifelinetxt = await callback.message.answer(text="Remember to use your lifelines, as you won't get a star sticker for not using them!", reply_markup=builder.as_markup())
+        await state.update_data(lifelinetxt=lifelinetxt)
+        await asyncio.sleep(0.5)
         cursor.execute("SELECT * FROM questions")
         questions = cursor.fetchall()
         await q_handler(callback, state, Form.q)
+        await asyncio.sleep(2)
+        await flavor.delete()
 
 async def q_handler(callback: types.CallbackQuery, state: FSMContext, qx: State) -> None:
     if callback.message:
@@ -162,7 +166,7 @@ async def loss_response(callback: types.CallbackQuery, state: FSMContext, qindex
 @form_router.callback_query(F.data == "start", StateFilter(None))
 async def start_callback(callback: types.CallbackQuery, state: FSMContext) -> None:
     if callback.message:
-        global round, last_interaction, photo, greeting
+        global round, last_interaction, questions, photo, greeting
         if photo and greeting:
             await photo.delete()
             await greeting.delete()
@@ -185,6 +189,8 @@ async def start_callback(callback: types.CallbackQuery, state: FSMContext) -> No
         lifelinetxt = await callback.message.answer(text="Remember to use your lifelines, as you won't get a star sticker for not using them!", reply_markup=builder.as_markup())
         await state.update_data(lifelinetxt=lifelinetxt)
         await asyncio.sleep(0.5)
+        cursor.execute("SELECT * FROM questions")
+        questions = cursor.fetchall()
         await q_handler(callback, state, Form.q)
         await asyncio.sleep(4)
         await flavor.delete()
@@ -315,6 +321,7 @@ async def q_response(callback: types.CallbackQuery, state: FSMContext) -> None:
             elif round == 15:
                 await data["lifelinetxt"].delete()
                 await state.clear()
+                flavorcarryover = []
                 flavor = await callback.message.answer("YOU DID IT! A great sum of a 1 000 000₴ is now in your hands. Congrats!", reply_markup=ReplyKeyboardRemove())
                 flavorcarryover.append(flavor)
                 if callback.from_user:
