@@ -44,6 +44,7 @@ qlist = Form.q
 reward = [0, 100, 200, 300, 500, 1000, 2000, 4000, 8000, 16000, 32000, 64000, 125000, 250000, 500000, 1000000]
 round = 1
 
+
 async def timeout(callback: types.CallbackQuery, state: FSMContext):
     global last_interaction, flavorcarryover
     while await state.get_state() == Form.q:
@@ -58,13 +59,14 @@ async def timeout(callback: types.CallbackQuery, state: FSMContext):
                 await data["audiencetxt"].delete()
             await state.clear()
             builder = InlineKeyboardBuilder()
-            builder.button(text=f"Begin anew", callback_data="start")
+            builder.button(text="Begin anew", callback_data="start")
             if callback.message:
                 f1 = await callback.message.answer(text="It's been a while, no?", reply_markup=ReplyKeyboardRemove())
                 f2 = await callback.message.answer(text="To upkeep server availability, we're forced to end your session prematurely. \nPreviously earned money is lost. \nTo begin anew, press the button below.", reply_markup=builder.as_markup())
                 flavorcarryover = [f1, f2]
             await state.clear()
         await asyncio.sleep(1)
+
 
 @dp.message(CommandStart())
 async def cmd_start(msg: types.Message, state: FSMContext) -> None:
@@ -74,7 +76,7 @@ async def cmd_start(msg: types.Message, state: FSMContext) -> None:
         photo=FSInputFile("wwtbam.jpg")
     )
     builder = InlineKeyboardBuilder()
-    builder.button(text=f"Begin", callback_data="start")
+    builder.button(text="Begin", callback_data="start")
     chat_id = msg.chat.id
     if msg.from_user:
         username = msg.from_user.username
@@ -92,6 +94,7 @@ async def cmd_start(msg: types.Message, state: FSMContext) -> None:
         admintxt = await msg.answer(text="Oh, we have some staffmen here. Just a reminder, you can add questions via /addquestion.")
         await asyncio.sleep(7)
         await admintxt.delete()
+
 
 @dp.callback_query(F.data == "begin_again", StateFilter(None))
 async def begin_again(callback: types.CallbackQuery, state: FSMContext) -> None:
@@ -119,6 +122,7 @@ async def begin_again(callback: types.CallbackQuery, state: FSMContext) -> None:
         await asyncio.sleep(2)
         await flavor.delete()
 
+
 async def q_handler(callback: types.CallbackQuery, state: FSMContext, qx: State) -> None:
     if callback.message:
         global round, qid
@@ -134,6 +138,7 @@ async def q_handler(callback: types.CallbackQuery, state: FSMContext, qx: State)
         await state.update_data(answer=questions[qid][2], question=questions[qid][0], options=questions[qid][1], qtxt=qtxt)
         questions.pop(qid)
 
+
 async def loss_response(callback: types.CallbackQuery, state: FSMContext, qindex: int) -> None:
     if callback.message:
         global flavorcarryover
@@ -142,7 +147,7 @@ async def loss_response(callback: types.CallbackQuery, state: FSMContext, qindex
         flavorcarryover = []
         await state.clear()
         builder = InlineKeyboardBuilder()
-        builder.button(text=f"Try again", callback_data="begin_again")
+        builder.button(text="Try again", callback_data="begin_again")
         flavor = await callback.message.answer(text=f"You lost, you got to question {qindex}", reply_markup=ReplyKeyboardRemove())
         flavorcarryover.append(flavor)
         if qindex > 10:
@@ -155,11 +160,12 @@ async def loss_response(callback: types.CallbackQuery, state: FSMContext, qindex
             flavorcarryover.append(performance)
         if callback.from_user:
             username = callback.from_user.username
-        cursor.execute(f"INSERT INTO stats VALUES ('{username}', {qindex-1}, '{'loss'}', '{dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S")}')")
+        cursor.execute(f"INSERT INTO stats VALUES ('{username}', {qindex-1}, '{'loss'}', '{dt.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}')")
         conn.commit()
         await asyncio.sleep(1)
-        beginagain = await callback.message.answer(text=f"Want to try again?", reply_markup=builder.as_markup())
+        beginagain = await callback.message.answer(text="Want to try again?", reply_markup=builder.as_markup())
         flavorcarryover.append(beginagain)
+
 
 @form_router.callback_query(F.data == "start", StateFilter(None))
 async def start_callback(callback: types.CallbackQuery, state: FSMContext) -> None:
@@ -206,7 +212,8 @@ response = [
     "32k locked in, if you lose you'll keep the stuff you got now. Round 11!",
     "64k in the pocket, and a great chance to get that up to 125k₴! Round 12 coming up.",
     "Bringing it up to 250k! Round 13 incoming.",
-    "Stakes at half a million! The show nears the end, and we'll see whether our dear contestant returns with a lot of money, an even bigger lot of money, or... with a lot smaller but still lot of money.",
+    "Stakes at half a million! The show nears the end, and we'll see whether our dear contestant returns with a lot of money, " \
+        "an even bigger lot of money, or... with a lot smaller but still lot of money.",
     "Last question! If you win, you get a MILLION! Yet, if you lose, you get... 32k₴. Round 15, hit it!"
 ]
 
@@ -251,11 +258,14 @@ async def phoneafriend(msg: types.Message, state: FSMContext) -> None:
         try:
             response = client.responses.create(
                 model="gpt-3.5-turbo",
-                input=f"Your friend has just used a Phone a friend lifeline on a game show, and has decided to call you. The question is: {data['question']}. The options are: {data['options']}. Respond with a short answer, giving them some information on the answer without saying the answer outright. The answer must be helpful and help eliminate at least one option, with the answer only revealed with enough context known by the contestant to answer the question."
+                input="Your friend has just used a Phone a friend lifeline on a game show, and has decided to call you. " \
+                    f"The question is: {data['question']}. The options are: {data['options']}. Respond with a short answer, " \
+                    "giving them some information on the answer without saying the answer outright. " \
+                    "The answer must be helpful and help eliminate at least one option, with the answer only revealed with enough context known by the contestant to answer the question."
             )
             phonetxt = await msg.answer(text=f"And they responded with: {response.output_text}")
             await state.update_data(phonetxt=phonetxt)
-        except Exception as e:
+        except Exception:
             flavor = await msg.answer(text="Line's dead, your dear friend did not pick up. They got something better to do, I guess.")
             await asyncio.sleep(5)
             await flavor.delete()
@@ -263,6 +273,7 @@ async def phoneafriend(msg: types.Message, state: FSMContext) -> None:
         flavor = await msg.answer(text="Oh no, you can't call your friend again, honey, lifelines are one-time-use.")
         await asyncio.sleep(5)
         await flavor.delete()
+
 
 @dp.message(F.text == "Ask the audience", StateFilter(Form.q))
 async def asktheaudience(msg: types.Message, state: FSMContext) -> None:
@@ -278,12 +289,14 @@ async def asktheaudience(msg: types.Message, state: FSMContext) -> None:
         try:
             response = client.responses.create(
                 model="gpt-3.5-turbo",
-                input=f"A contestant has used an Ask the audience lifeline on a game show, and the audience is voting on the answer. The question is: {data['question']}. The options are: {data['options']}. Respond with the options and the votes, example: Moth: 40%, Roach: 10%, Fly:30%, Japanese beetle: 20%."
+                input="A contestant has used an Ask the audience lifeline on a game show, and the audience is voting on the answer. " \
+                    f"The question is: {data['question']}. The options are: {data['options']}. Respond with the options and the votes, " \
+                    "example: Moth: 40%, Roach: 10%, Fly:30%, Japanese beetle: 20%."
             )
             
             audiencetxt = await msg.answer(text=f"And the votes are in: {response.output_text}")
             await state.update_data(audiencetxt=audiencetxt)
-        except Exception as e:
+        except Exception:
             flavor = await msg.answer(text="Our vote counting system ran into an issue, so the votes have been invalidated. You'll have to answer without the audience's help")
             await asyncio.sleep(5)
             await flavor.delete()
@@ -291,6 +304,7 @@ async def asktheaudience(msg: types.Message, state: FSMContext) -> None:
         flavor = await msg.answer(text="Oh, the audience is recovering from the last vote! You can't ask them for another!")
         await asyncio.sleep(5)
         await flavor.delete()
+
 
 @form_router.callback_query(StateFilter(Form.q))
 async def q_response(callback: types.CallbackQuery, state: FSMContext) -> None:
@@ -327,9 +341,9 @@ async def q_response(callback: types.CallbackQuery, state: FSMContext) -> None:
                 cursor.execute(f"INSERT INTO stats VALUES ('{username}', {15}, '{'win'}', '{dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S")}')")
                 conn.commit()
                 builder = InlineKeyboardBuilder()
-                builder.button(text=f"Get another million", callback_data="begin_again")
+                builder.button(text="Get another million", callback_data="begin_again")
                 await asyncio.sleep(1)
-                beginagain = await callback.message.answer(text=f"Surely you don't want another million, do you?", reply_markup=builder.as_markup())
+                beginagain = await callback.message.answer(text="Surely you don't want another million, do you?", reply_markup=builder.as_markup())
                 flavorcarryover.append(beginagain)
                 await state.clear()
             if round < 15:
@@ -349,11 +363,26 @@ async def q_response(callback: types.CallbackQuery, state: FSMContext) -> None:
             await loss_response(callback, state, round)
             await state.clear()
 
+
 @dp.message(Command("rules"))
 async def rules_handler(msg: types.Message) -> None:
     global last_interaction
     last_interaction = time.time()
-    await msg.answer(text="Rules are simple: \n — Answer up to 15 questions \n — Questions have 4 options, where only one is correct \n — If you answer correctly, you move on to the next round \n — If you don't, you lose and get a certain amount of money, depending on which round you lost on: \n     — nothing if you lost on rounds 1-5\n     — 1000₴ on rounds 6-10\n     — 32k₴ on rounds 11-15\n — There are 15 rounds total; if you pass all 15, you get a million ₴.\n — Also, there's a 10 minute timeout timer (which could be reset by pressing a button, typing or sending anything) after which your session is removed and kept money is lost, so don't leave the show early! \n — Also, you have access to lifelines: 50/50, Phone a friend, and Ask the audience. They're one-time-use, though, so don't spend them willy-nilly!")
+    await msg.answer(
+        text="""Rules are simple: 
+ — Answer up to 15 questions 
+ — Questions have 4 options, where only one is correct 
+ — If you answer correctly, you move on to the next round 
+ — If you don't, you lose and get a certain amount of money, depending on which round you lost on: 
+     — nothing if you lost on rounds 1-5
+     — 1000₴ on rounds 6-10
+     — 32k₴ on rounds 11-15
+ — There are 15 rounds total; if you pass all 15, you get a million ₴.
+ — Also, there's a 10 minute timeout timer (which could be reset by pressing a button, typing or sending anything),"""
+ "after which your session is removed and kept money is lost, so don't leave the show early! \
+    \n — Also, you have access to lifelines: 50/50, Phone a friend, and Ask the audience. They're one-time-use, though, so don't spend them willy-nilly!"
+    )
+
 
 @dp.message(Command("leaderboard"))
 async def leaderboard_handler(msg: types.Message) -> None:
@@ -366,6 +395,7 @@ async def leaderboard_handler(msg: types.Message) -> None:
         leaderoutput.append(f"{i+1}. {leaderboard[i][0]} {"won" if leaderboard[i][2] == "win" else "lost"} {reward[leaderboard[i][1]]}₴ on {leaderboard[i][3].strftime("%b %d %H:%M")}")
     await msg.answer(text="\n".join(leaderoutput))
 
+
 @dp.message(Command("addquestion"))
 async def addquestion(msg: types.Message, state: FSMContext) -> None:
     global last_interaction
@@ -377,11 +407,13 @@ async def addquestion(msg: types.Message, state: FSMContext) -> None:
     else:
         await msg.answer(text="I'd love to help you add a question, yet, for security reasons, only staff have permission to do so. Maybe consider filling out a job application at the front desk?")
 
+
 @form_router.message(Form.addq)
 async def addoption1(msg: types.Message, state: FSMContext) -> None:
     await state.update_data(question=msg.text)
     await state.set_state(Form.addo1)
     await msg.answer(text="Enter the first option:")
+
 
 @form_router.message(Form.addo1)
 async def addoption2(msg: types.Message, state: FSMContext) -> None:
@@ -389,17 +421,20 @@ async def addoption2(msg: types.Message, state: FSMContext) -> None:
     await state.set_state(Form.addo2)
     await msg.answer(text="Enter the second option:")
 
+
 @form_router.message(Form.addo2)
 async def addoption3(msg: types.Message, state: FSMContext) -> None:
     await state.update_data(option2=msg.text)
     await state.set_state(Form.addo3)
     await msg.answer(text="Enter the third option:")
 
+
 @form_router.message(Form.addo3)
 async def addoption4(msg: types.Message, state: FSMContext) -> None:
     await state.update_data(option3=msg.text)
     await state.set_state(Form.addo4)
     await msg.answer(text="Enter the fourth option:")
+
 
 @form_router.message(Form.addo4)
 async def addanswer(msg: types.Message, state: FSMContext) -> None:
@@ -412,12 +447,13 @@ async def addanswer(msg: types.Message, state: FSMContext) -> None:
     builder.adjust(2, 2)
     await msg.answer(text="Select an answer:", reply_markup=builder.as_markup())
 
+
 @form_router.callback_query(Form.adda)
 async def finishquestion(callback: types.CallbackQuery, state: FSMContext) -> None:
     if callback.message:
         await state.update_data(answer=callback.data)
         data = await state.get_data()
-        cursor.execute(f"INSERT INTO questions (question, options, answer) VALUES (%s, %s, %s)", (data["question"], [data["option1"], data["option2"], data["option3"], data["option4"]], data["answer"]))
+        cursor.execute("INSERT INTO questions (question, options, answer) VALUES (%s, %s, %s)", (data["question"], [data["option1"], data["option2"], data["option3"], data["option4"]], data["answer"]))
         conn.commit()
         builder = InlineKeyboardBuilder()
         builder.button(text="Start", callback_data="start")
@@ -446,6 +482,7 @@ async def photo_handler(msg: types.Message) -> None:
     await msg.answer(text=photo_response[random.randint(0, 2)])
     last_interaction = time.time()
 
+
 @dp.message(F.text, StateFilter(None), ~F.text.in_(["50/50", "Phone a friend", "Ask the audience"]))
 @dp.message(F.text, StateFilter(Form.q), ~F.text.in_(["50/50", "Phone a friend", "Ask the audience"]))
 async def text_handler(msg: types.Message) -> None:
@@ -453,12 +490,14 @@ async def text_handler(msg: types.Message) -> None:
     await msg.answer(text=text_response[random.randint(0, 2)])
     last_interaction = time.time()
 
+
 @dp.message(StateFilter(None), ~F.text.in_(["50/50", "Phone a friend", "Ask the audience"]))
 @dp.message(StateFilter(Form.q), ~F.text.in_(["50/50", "Phone a friend", "Ask the audience"]))
 async def nodata_handler(msg: types.Message) -> None:
     global last_interaction
     await msg.answer(text=nodata_response[random.randint(0, 2)])
     last_interaction = time.time()
+
 
 async def main():
     dp.include_router(form_router)
