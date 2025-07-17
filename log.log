@@ -1,0 +1,538 @@
+INFO:aiogram.dispatcher:Start polling
+INFO:aiogram.dispatcher:Run polling for bot @testsubnum37_bot id=5771726025 - 'Test subject #37 bot'
+INFO:aiogram.event:Update id=191007587 is handled. Duration 84 ms by bot id=5771726025
+INFO:aiogram.event:Update id=191007586 is handled. Duration 7392 ms by bot id=5771726025
+INFO:aiogram.dispatcher:Start polling
+INFO:aiogram.dispatcher:Run polling for bot @testsubnum37_bot id=5771726025 - 'Test subject #37 bot'
+INFO:aiogram.event:Update id=191007588 is handled. Duration 7382 ms by bot id=5771726025
+INFO:aiogram.dispatcher:Start polling
+INFO:aiogram.dispatcher:Run polling for bot @testsubnum37_bot id=5771726025 - 'Test subject #37 bot'
+INFO:aiogram.event:Update id=191007589 is handled. Duration 7526 ms by bot id=5771726025
+INFO:aiogram.dispatcher:Start polling
+INFO:aiogram.dispatcher:Run polling for bot @testsubnum37_bot id=5771726025 - 'Test subject #37 bot'
+INFO:aiogram.event:Update id=191007590 is handled. Duration 7330 ms by bot id=5771726025
+INFO:aiogram.dispatcher:Start polling
+INFO:aiogram.dispatcher:Run polling for bot @testsubnum37_bot id=5771726025 - 'Test subject #37 bot'
+INFO:aiogram.event:Update id=191007591 is handled. Duration 259 ms by bot id=5771726025
+INFO:aiogram.dispatcher:Start polling
+INFO:aiogram.dispatcher:Run polling for bot @testsubnum37_bot id=5771726025 - 'Test subject #37 bot'
+INFO:aiogram.event:Update id=191007592 is not handled. Duration 0 ms by bot id=5771726025
+ERROR:aiogram.event:Cause exception while process update id=191007592 by bot id=5771726025
+TypeError: Userware.__init__() takes 1 positional argument but 2 were given
+Traceback (most recent call last):
+  File "D:\Shitdump\githubstuff\millionairebot\.venv\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 309, in _process_update
+    response = await self.feed_update(bot, update, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Shitdump\githubstuff\millionairebot\.venv\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 158, in feed_update
+    response = await self.update.wrap_outer_middleware(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<7 lines>...
+    )
+    ^
+  File "D:\Shitdump\githubstuff\millionairebot\.venv\Lib\site-packages\aiogram\dispatcher\middlewares\error.py", line 25, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Shitdump\githubstuff\millionairebot\.venv\Lib\site-packages\aiogram\dispatcher\middlewares\user_context.py", line 56, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Shitdump\githubstuff\millionairebot\.venv\Lib\site-packages\aiogram\fsm\middleware.py", line 42, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Shitdump\githubstuff\millionairebot\.venv\Lib\site-packages\aiogram\dispatcher\event\telegram.py", line 121, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Shitdump\githubstuff\millionairebot\.venv\Lib\site-packages\aiogram\dispatcher\event\handler.py", line 43, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "D:\Shitdump\githubstuff\millionairebot\.venv\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 276, in _listen_update
+    return await self.propagate_event(update_type=update_type, event=event, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Shitdump\githubstuff\millionairebot\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 146, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Shitdump\githubstuff\millionairebot\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 141, in _wrapped
+    return await self._propagate_event(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        observer=observer, update_type=update_type, event=telegram_event, **data
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "D:\Shitdump\githubstuff\millionairebot\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 166, in _propagate_event
+    response = await observer.trigger(event, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Shitdump\githubstuff\millionairebot\.venv\Lib\site-packages\aiogram\dispatcher\event\telegram.py", line 121, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Shitdump\githubstuff\millionairebot\.venv\Lib\site-packages\aiogram\dispatcher\event\handler.py", line 43, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "d:\Shitdump\githubstuff\millionairebot\simplifiedscambot.py", line 71, in cmd_start
+    form_router.message.middleware(Userware(msg))
+                                   ~~~~~~~~^^^^^
+TypeError: Userware.__init__() takes 1 positional argument but 2 were given
+INFO:aiogram.event:Update id=191007593 is not handled. Duration 0 ms by bot id=5771726025
+ERROR:aiogram.event:Cause exception while process update id=191007593 by bot id=5771726025
+TypeError: Userware.__init__() takes 1 positional argument but 2 were given
+Traceback (most recent call last):
+  File "D:\Shitdump\githubstuff\millionairebot\.venv\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 309, in _process_update
+    response = await self.feed_update(bot, update, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Shitdump\githubstuff\millionairebot\.venv\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 158, in feed_update
+    response = await self.update.wrap_outer_middleware(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<7 lines>...
+    )
+    ^
+  File "D:\Shitdump\githubstuff\millionairebot\.venv\Lib\site-packages\aiogram\dispatcher\middlewares\error.py", line 25, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Shitdump\githubstuff\millionairebot\.venv\Lib\site-packages\aiogram\dispatcher\middlewares\user_context.py", line 56, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Shitdump\githubstuff\millionairebot\.venv\Lib\site-packages\aiogram\fsm\middleware.py", line 42, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Shitdump\githubstuff\millionairebot\.venv\Lib\site-packages\aiogram\dispatcher\event\telegram.py", line 121, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Shitdump\githubstuff\millionairebot\.venv\Lib\site-packages\aiogram\dispatcher\event\handler.py", line 43, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "D:\Shitdump\githubstuff\millionairebot\.venv\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 276, in _listen_update
+    return await self.propagate_event(update_type=update_type, event=event, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Shitdump\githubstuff\millionairebot\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 146, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Shitdump\githubstuff\millionairebot\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 141, in _wrapped
+    return await self._propagate_event(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        observer=observer, update_type=update_type, event=telegram_event, **data
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "D:\Shitdump\githubstuff\millionairebot\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 166, in _propagate_event
+    response = await observer.trigger(event, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Shitdump\githubstuff\millionairebot\.venv\Lib\site-packages\aiogram\dispatcher\event\telegram.py", line 121, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Shitdump\githubstuff\millionairebot\.venv\Lib\site-packages\aiogram\dispatcher\event\handler.py", line 43, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "d:\Shitdump\githubstuff\millionairebot\simplifiedscambot.py", line 71, in cmd_start
+    form_router.message.middleware(Userware(msg))
+                                   ~~~~~~~~^^^^^
+TypeError: Userware.__init__() takes 1 positional argument but 2 were given
+INFO:aiogram.dispatcher:Polling stopped
+INFO:aiogram.dispatcher:Polling stopped for bot @testsubnum37_bot id=5771726025 - 'Test subject #37 bot'
+INFO:aiogram.dispatcher:Start polling
+INFO:aiogram.dispatcher:Run polling for bot @testsubnum37_bot id=5771726025 - 'Test subject #37 bot'
+INFO:aiogram.event:Update id=191007594 is not handled. Duration 169 ms by bot id=5771726025
+ERROR:aiogram.event:Cause exception while process update id=191007594 by bot id=5771726025
+TypeError: Userware.__init__() takes 1 positional argument but 2 were given
+Traceback (most recent call last):
+  File "D:\Shitdump\githubstuff\millionairebot\.venv\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 309, in _process_update
+    response = await self.feed_update(bot, update, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Shitdump\githubstuff\millionairebot\.venv\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 158, in feed_update
+    response = await self.update.wrap_outer_middleware(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<7 lines>...
+    )
+    ^
+  File "D:\Shitdump\githubstuff\millionairebot\.venv\Lib\site-packages\aiogram\dispatcher\middlewares\error.py", line 25, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Shitdump\githubstuff\millionairebot\.venv\Lib\site-packages\aiogram\dispatcher\middlewares\user_context.py", line 56, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Shitdump\githubstuff\millionairebot\.venv\Lib\site-packages\aiogram\fsm\middleware.py", line 42, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Shitdump\githubstuff\millionairebot\.venv\Lib\site-packages\aiogram\dispatcher\event\telegram.py", line 121, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Shitdump\githubstuff\millionairebot\.venv\Lib\site-packages\aiogram\dispatcher\event\handler.py", line 43, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "D:\Shitdump\githubstuff\millionairebot\.venv\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 276, in _listen_update
+    return await self.propagate_event(update_type=update_type, event=event, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Shitdump\githubstuff\millionairebot\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 146, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Shitdump\githubstuff\millionairebot\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 141, in _wrapped
+    return await self._propagate_event(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        observer=observer, update_type=update_type, event=telegram_event, **data
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "D:\Shitdump\githubstuff\millionairebot\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 166, in _propagate_event
+    response = await observer.trigger(event, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Shitdump\githubstuff\millionairebot\.venv\Lib\site-packages\aiogram\dispatcher\event\telegram.py", line 121, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Shitdump\githubstuff\millionairebot\.venv\Lib\site-packages\aiogram\dispatcher\event\handler.py", line 43, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "d:\Shitdump\githubstuff\millionairebot\simplifiedscambot.py", line 81, in cmd_start
+    print(Userware(msg).username)
+          ~~~~~~~~^^^^^
+TypeError: Userware.__init__() takes 1 positional argument but 2 were given
+INFO:aiogram.dispatcher:Polling stopped
+INFO:aiogram.dispatcher:Polling stopped for bot @testsubnum37_bot id=5771726025 - 'Test subject #37 bot'
+INFO:aiogram.dispatcher:Start polling
+INFO:aiogram.dispatcher:Run polling for bot @testsubnum37_bot id=5771726025 - 'Test subject #37 bot'
+INFO:aiogram.event:Update id=191007595 is handled. Duration 7360 ms by bot id=5771726025
+INFO:aiogram.dispatcher:Start polling
+INFO:aiogram.dispatcher:Run polling for bot @testsubnum37_bot id=5771726025 - 'Test subject #37 bot'
+INFO:aiogram.event:Update id=191007596 is not handled. Duration 1 ms by bot id=5771726025
+ERROR:aiogram.event:Cause exception while process update id=191007596 by bot id=5771726025
+TypeError: cmd_start() missing 1 required positional argument: 'data'
+Traceback (most recent call last):
+  File "D:\Shitdump\githubstuff\millionairebot\.venv\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 309, in _process_update
+    response = await self.feed_update(bot, update, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Shitdump\githubstuff\millionairebot\.venv\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 158, in feed_update
+    response = await self.update.wrap_outer_middleware(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<7 lines>...
+    )
+    ^
+  File "D:\Shitdump\githubstuff\millionairebot\.venv\Lib\site-packages\aiogram\dispatcher\middlewares\error.py", line 25, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Shitdump\githubstuff\millionairebot\.venv\Lib\site-packages\aiogram\dispatcher\middlewares\user_context.py", line 56, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Shitdump\githubstuff\millionairebot\.venv\Lib\site-packages\aiogram\fsm\middleware.py", line 42, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Shitdump\githubstuff\millionairebot\.venv\Lib\site-packages\aiogram\dispatcher\event\telegram.py", line 121, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Shitdump\githubstuff\millionairebot\.venv\Lib\site-packages\aiogram\dispatcher\event\handler.py", line 43, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "D:\Shitdump\githubstuff\millionairebot\.venv\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 276, in _listen_update
+    return await self.propagate_event(update_type=update_type, event=event, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Shitdump\githubstuff\millionairebot\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 146, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Shitdump\githubstuff\millionairebot\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 141, in _wrapped
+    return await self._propagate_event(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        observer=observer, update_type=update_type, event=telegram_event, **data
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "D:\Shitdump\githubstuff\millionairebot\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 166, in _propagate_event
+    response = await observer.trigger(event, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Shitdump\githubstuff\millionairebot\.venv\Lib\site-packages\aiogram\dispatcher\event\telegram.py", line 121, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "d:\Shitdump\githubstuff\millionairebot\bot\middlewares.py", line 18, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Shitdump\githubstuff\millionairebot\.venv\Lib\site-packages\aiogram\dispatcher\event\handler.py", line 43, in call
+    return await wrapped()
+                 ~~~~~~~^^
+TypeError: cmd_start() missing 1 required positional argument: 'data'
+INFO:aiogram.dispatcher:Start polling
+INFO:aiogram.dispatcher:Run polling for bot @testsubnum37_bot id=5771726025 - 'Test subject #37 bot'
+INFO:aiogram.event:Update id=191007597 is not handled. Duration 0 ms by bot id=5771726025
+ERROR:aiogram.event:Cause exception while process update id=191007597 by bot id=5771726025
+TypeError: cmd_start() missing 1 required positional argument: 'data'
+Traceback (most recent call last):
+  File "D:\Shitdump\githubstuff\millionairebot\.venv\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 309, in _process_update
+    response = await self.feed_update(bot, update, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Shitdump\githubstuff\millionairebot\.venv\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 158, in feed_update
+    response = await self.update.wrap_outer_middleware(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<7 lines>...
+    )
+    ^
+  File "D:\Shitdump\githubstuff\millionairebot\.venv\Lib\site-packages\aiogram\dispatcher\middlewares\error.py", line 25, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Shitdump\githubstuff\millionairebot\.venv\Lib\site-packages\aiogram\dispatcher\middlewares\user_context.py", line 56, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Shitdump\githubstuff\millionairebot\.venv\Lib\site-packages\aiogram\fsm\middleware.py", line 42, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Shitdump\githubstuff\millionairebot\.venv\Lib\site-packages\aiogram\dispatcher\event\telegram.py", line 121, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Shitdump\githubstuff\millionairebot\.venv\Lib\site-packages\aiogram\dispatcher\event\handler.py", line 43, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "D:\Shitdump\githubstuff\millionairebot\.venv\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 276, in _listen_update
+    return await self.propagate_event(update_type=update_type, event=event, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Shitdump\githubstuff\millionairebot\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 146, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Shitdump\githubstuff\millionairebot\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 141, in _wrapped
+    return await self._propagate_event(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        observer=observer, update_type=update_type, event=telegram_event, **data
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "D:\Shitdump\githubstuff\millionairebot\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 166, in _propagate_event
+    response = await observer.trigger(event, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Shitdump\githubstuff\millionairebot\.venv\Lib\site-packages\aiogram\dispatcher\event\telegram.py", line 121, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "d:\Shitdump\githubstuff\millionairebot\bot\middlewares.py", line 18, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Shitdump\githubstuff\millionairebot\.venv\Lib\site-packages\aiogram\dispatcher\event\handler.py", line 43, in call
+    return await wrapped()
+                 ~~~~~~~^^
+TypeError: cmd_start() missing 1 required positional argument: 'data'
+INFO:aiogram.dispatcher:Start polling
+INFO:aiogram.dispatcher:Run polling for bot @testsubnum37_bot id=5771726025 - 'Test subject #37 bot'
+INFO:aiogram.event:Update id=191007598 is not handled. Duration 0 ms by bot id=5771726025
+ERROR:aiogram.event:Cause exception while process update id=191007598 by bot id=5771726025
+TypeError: cmd_start() missing 1 required positional argument: 'data'
+Traceback (most recent call last):
+  File "D:\Shitdump\githubstuff\millionairebot\.venv\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 309, in _process_update
+    response = await self.feed_update(bot, update, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Shitdump\githubstuff\millionairebot\.venv\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 158, in feed_update
+    response = await self.update.wrap_outer_middleware(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<7 lines>...
+    )
+    ^
+  File "D:\Shitdump\githubstuff\millionairebot\.venv\Lib\site-packages\aiogram\dispatcher\middlewares\error.py", line 25, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Shitdump\githubstuff\millionairebot\.venv\Lib\site-packages\aiogram\dispatcher\middlewares\user_context.py", line 56, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Shitdump\githubstuff\millionairebot\.venv\Lib\site-packages\aiogram\fsm\middleware.py", line 42, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Shitdump\githubstuff\millionairebot\.venv\Lib\site-packages\aiogram\dispatcher\event\telegram.py", line 121, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Shitdump\githubstuff\millionairebot\.venv\Lib\site-packages\aiogram\dispatcher\event\handler.py", line 43, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "D:\Shitdump\githubstuff\millionairebot\.venv\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 276, in _listen_update
+    return await self.propagate_event(update_type=update_type, event=event, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Shitdump\githubstuff\millionairebot\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 146, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Shitdump\githubstuff\millionairebot\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 141, in _wrapped
+    return await self._propagate_event(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        observer=observer, update_type=update_type, event=telegram_event, **data
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "D:\Shitdump\githubstuff\millionairebot\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 166, in _propagate_event
+    response = await observer.trigger(event, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Shitdump\githubstuff\millionairebot\.venv\Lib\site-packages\aiogram\dispatcher\event\telegram.py", line 121, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Shitdump\githubstuff\millionairebot\.venv\Lib\site-packages\aiogram\dispatcher\event\handler.py", line 43, in call
+    return await wrapped()
+                 ~~~~~~~^^
+TypeError: cmd_start() missing 1 required positional argument: 'data'
+INFO:aiogram.dispatcher:Start polling
+INFO:aiogram.dispatcher:Run polling for bot @testsubnum37_bot id=5771726025 - 'Test subject #37 bot'
+INFO:aiogram.event:Update id=191007599 is not handled. Duration 0 ms by bot id=5771726025
+ERROR:aiogram.event:Cause exception while process update id=191007599 by bot id=5771726025
+TypeError: cmd_start() missing 1 required positional argument: 'data'
+Traceback (most recent call last):
+  File "D:\Shitdump\githubstuff\millionairebot\.venv\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 309, in _process_update
+    response = await self.feed_update(bot, update, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Shitdump\githubstuff\millionairebot\.venv\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 158, in feed_update
+    response = await self.update.wrap_outer_middleware(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<7 lines>...
+    )
+    ^
+  File "D:\Shitdump\githubstuff\millionairebot\.venv\Lib\site-packages\aiogram\dispatcher\middlewares\error.py", line 25, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Shitdump\githubstuff\millionairebot\.venv\Lib\site-packages\aiogram\dispatcher\middlewares\user_context.py", line 56, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Shitdump\githubstuff\millionairebot\.venv\Lib\site-packages\aiogram\fsm\middleware.py", line 42, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Shitdump\githubstuff\millionairebot\.venv\Lib\site-packages\aiogram\dispatcher\event\telegram.py", line 121, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Shitdump\githubstuff\millionairebot\.venv\Lib\site-packages\aiogram\dispatcher\event\handler.py", line 43, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "D:\Shitdump\githubstuff\millionairebot\.venv\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 276, in _listen_update
+    return await self.propagate_event(update_type=update_type, event=event, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Shitdump\githubstuff\millionairebot\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 146, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Shitdump\githubstuff\millionairebot\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 141, in _wrapped
+    return await self._propagate_event(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        observer=observer, update_type=update_type, event=telegram_event, **data
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "D:\Shitdump\githubstuff\millionairebot\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 166, in _propagate_event
+    response = await observer.trigger(event, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Shitdump\githubstuff\millionairebot\.venv\Lib\site-packages\aiogram\dispatcher\event\telegram.py", line 121, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Shitdump\githubstuff\millionairebot\.venv\Lib\site-packages\aiogram\dispatcher\event\handler.py", line 43, in call
+    return await wrapped()
+                 ~~~~~~~^^
+TypeError: cmd_start() missing 1 required positional argument: 'data'
+INFO:aiogram.dispatcher:Start polling
+INFO:aiogram.dispatcher:Run polling for bot @testsubnum37_bot id=5771726025 - 'Test subject #37 bot'
+INFO:aiogram.event:Update id=191007600 is handled. Duration 7479 ms by bot id=5771726025
+INFO:aiogram.dispatcher:Start polling
+INFO:aiogram.dispatcher:Run polling for bot @testsubnum37_bot id=5771726025 - 'Test subject #37 bot'
+INFO:aiogram.event:Update id=191007601 is handled. Duration 7537 ms by bot id=5771726025
+INFO:aiogram.event:Update id=191007602 is handled. Duration 5453 ms by bot id=5771726025
+INFO:aiogram.event:Update id=191007603 is handled. Duration 142 ms by bot id=5771726025
+INFO:__main__:vikdem37 lost the game on round 1 at 2025-07-17 10:08:36
+INFO:aiogram.event:Update id=191007604 is handled. Duration 1552 ms by bot id=5771726025
+INFO:aiogram.dispatcher:Polling stopped
+INFO:aiogram.dispatcher:Polling stopped for bot @testsubnum37_bot id=5771726025 - 'Test subject #37 bot'
+INFO:aiogram.dispatcher:Start polling
+INFO:aiogram.dispatcher:Run polling for bot @testsubnum37_bot id=5771726025 - 'Test subject #37 bot'
+INFO:aiogram.event:Update id=191007605 is handled. Duration 7363 ms by bot id=5771726025
+INFO:aiogram.dispatcher:Polling stopped
+INFO:aiogram.dispatcher:Polling stopped for bot @testsubnum37_bot id=5771726025 - 'Test subject #37 bot'
+INFO:aiogram.dispatcher:Start polling
+INFO:aiogram.dispatcher:Run polling for bot @testsubnum37_bot id=5771726025 - 'Test subject #37 bot'
+INFO:aiogram.event:Update id=191007606 is handled. Duration 7372 ms by bot id=5771726025
+INFO:aiogram.dispatcher:Polling stopped
+INFO:aiogram.dispatcher:Polling stopped for bot @testsubnum37_bot id=5771726025 - 'Test subject #37 bot'
+INFO:aiogram.dispatcher:Start polling
+INFO:aiogram.dispatcher:Run polling for bot @testsubnum37_bot id=5771726025 - 'Test subject #37 bot'
+INFO:aiogram.dispatcher:Polling stopped
+INFO:aiogram.event:Update id=191007607 is not handled. Duration 6733 ms by bot id=5771726025
+INFO:aiogram.dispatcher:Polling stopped for bot @testsubnum37_bot id=5771726025 - 'Test subject #37 bot'
+INFO:aiogram.dispatcher:Start polling
+INFO:aiogram.dispatcher:Run polling for bot @testsubnum37_bot id=5771726025 - 'Test subject #37 bot'
+INFO:aiogram.event:Update id=191007608 is handled. Duration 7544 ms by bot id=5771726025
+INFO:aiogram.dispatcher:Polling stopped
+INFO:aiogram.dispatcher:Polling stopped for bot @testsubnum37_bot id=5771726025 - 'Test subject #37 bot'
+INFO:aiogram.dispatcher:Start polling
+INFO:aiogram.dispatcher:Run polling for bot @testsubnum37_bot id=5771726025 - 'Test subject #37 bot'
+INFO:aiogram.dispatcher:Start polling
+INFO:aiogram.dispatcher:Run polling for bot @testsubnum37_bot id=5771726025 - 'Test subject #37 bot'
+ERROR:__main__:Photo stall detected: name 'photo' is not defined
+INFO:aiogram.event:Update id=191007610 is handled. Duration 5590 ms by bot id=5771726025
+INFO:aiogram.event:Update id=191007611 is handled. Duration 3507 ms by bot id=5771726025
+INFO:aiogram.event:Update id=191007612 is handled. Duration 3287 ms by bot id=5771726025
+INFO:aiogram.event:Update id=191007613 is handled. Duration 3254 ms by bot id=5771726025
+INFO:aiogram.event:Update id=191007614 is handled. Duration 3176 ms by bot id=5771726025
+INFO:aiogram.event:Update id=191007615 is handled. Duration 3281 ms by bot id=5771726025
+INFO:aiogram.event:Update id=191007616 is handled. Duration 3182 ms by bot id=5771726025
+INFO:aiogram.event:Update id=191007617 is handled. Duration 3478 ms by bot id=5771726025
+INFO:aiogram.event:Update id=191007618 is handled. Duration 3210 ms by bot id=5771726025
+INFO:aiogram.event:Update id=191007619 is handled. Duration 3185 ms by bot id=5771726025
+INFO:aiogram.event:Update id=191007620 is handled. Duration 3231 ms by bot id=5771726025
+INFO:aiogram.event:Update id=191007621 is handled. Duration 3366 ms by bot id=5771726025
+INFO:aiogram.event:Update id=191007622 is handled. Duration 3197 ms by bot id=5771726025
+INFO:aiogram.event:Update id=191007623 is handled. Duration 7383 ms by bot id=5771726025
+INFO:aiogram.event:Update id=191007624 is handled. Duration 5461 ms by bot id=5771726025
+INFO:__main__:vikdem37 won the game at 2025-07-17 10:19:19
+INFO:aiogram.event:Update id=191007625 is handled. Duration 1201 ms by bot id=5771726025
+INFO:aiogram.dispatcher:Polling stopped
+INFO:aiogram.dispatcher:Polling stopped for bot @testsubnum37_bot id=5771726025 - 'Test subject #37 bot'
+INFO:aiogram.dispatcher:Start polling
+INFO:aiogram.dispatcher:Run polling for bot @testsubnum37_bot id=5771726025 - 'Test subject #37 bot'
+INFO:aiogram.event:Update id=191007626 is handled. Duration 124 ms by bot id=5771726025
+INFO:aiogram.dispatcher:Polling stopped
+INFO:aiogram.dispatcher:Polling stopped for bot @testsubnum37_bot id=5771726025 - 'Test subject #37 bot'
+INFO:aiogram.dispatcher:Start polling
+INFO:aiogram.dispatcher:Run polling for bot @testsubnum37_bot id=5771726025 - 'Test subject #37 bot'
+INFO:aiogram.event:Update id=191007627 is handled. Duration 221 ms by bot id=5771726025
+INFO:aiogram.event:Update id=191007628 is handled. Duration 61 ms by bot id=5771726025
+INFO:aiogram.dispatcher:Polling stopped
+INFO:aiogram.dispatcher:Polling stopped for bot @testsubnum37_bot id=5771726025 - 'Test subject #37 bot'
+INFO:aiogram.dispatcher:Start polling
+INFO:aiogram.dispatcher:Run polling for bot @testsubnum37_bot id=5771726025 - 'Test subject #37 bot'
+INFO:aiogram.event:Update id=191007629 is handled. Duration 213 ms by bot id=5771726025
+INFO:aiogram.dispatcher:Polling stopped
+INFO:aiogram.dispatcher:Polling stopped for bot @testsubnum37_bot id=5771726025 - 'Test subject #37 bot'
+INFO:aiogram.dispatcher:Start polling
+INFO:aiogram.dispatcher:Run polling for bot @testsubnum37_bot id=5771726025 - 'Test subject #37 bot'
+INFO:aiogram.event:Update id=191007630 is handled. Duration 164 ms by bot id=5771726025
+INFO:aiogram.event:Update id=191007631 is handled. Duration 7294 ms by bot id=5771726025
+INFO:aiogram.event:Update id=191007632 is handled. Duration 5314 ms by bot id=5771726025
+INFO:aiogram.event:Update id=191007633 is handled. Duration 3197 ms by bot id=5771726025
+INFO:aiogram.event:Update id=191007634 is handled. Duration 3186 ms by bot id=5771726025
+INFO:aiogram.event:Update id=191007635 is handled. Duration 3205 ms by bot id=5771726025
+INFO:aiogram.event:Update id=191007636 is handled. Duration 3259 ms by bot id=5771726025
+INFO:aiogram.event:Update id=191007637 is handled. Duration 3291 ms by bot id=5771726025
+INFO:aiogram.event:Update id=191007638 is handled. Duration 3219 ms by bot id=5771726025
+INFO:httpx:HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 429 Too Many Requests"
+INFO:openai._base_client:Retrying request to /responses in 0.469836 seconds
+INFO:httpx:HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 429 Too Many Requests"
+INFO:openai._base_client:Retrying request to /responses in 0.937427 seconds
+INFO:httpx:HTTP Request: POST https://api.openai.com/v1/responses "HTTP/1.1 429 Too Many Requests"
+ERROR:__main__:Phone a friend AI error raised: Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}
+INFO:aiogram.event:Update id=191007639 is handled. Duration 28453 ms by bot id=5771726025
+INFO:aiogram.event:Update id=191007640 is handled. Duration 3254 ms by bot id=5771726025
+INFO:aiogram.event:Update id=191007641 is handled. Duration 3508 ms by bot id=5771726025
+INFO:aiogram.event:Update id=191007642 is handled. Duration 3205 ms by bot id=5771726025
+INFO:aiogram.event:Update id=191007643 is handled. Duration 135 ms by bot id=5771726025
+INFO:aiogram.event:Update id=191007644 is handled. Duration 3256 ms by bot id=5771726025
+INFO:aiogram.event:Update id=191007645 is handled. Duration 3227 ms by bot id=5771726025
+INFO:aiogram.event:Update id=191007646 is handled. Duration 3222 ms by bot id=5771726025
+INFO:aiogram.event:Update id=191007647 is handled. Duration 7344 ms by bot id=5771726025
+INFO:aiogram.event:Update id=191007648 is handled. Duration 5223 ms by bot id=5771726025
+INFO:__main__:vikdem37 won the game at 2025-07-17 18:01:56
+INFO:aiogram.event:Update id=191007649 is handled. Duration 1283 ms by bot id=5771726025
+INFO:aiogram.event:Update id=191007650 is handled. Duration 154 ms by bot id=5771726025
+INFO:aiogram.dispatcher:Start polling
+INFO:aiogram.dispatcher:Run polling for bot @testsubnum37_bot id=5771726025 - 'Test subject #37 bot'
+INFO:aiogram.event:Update id=191007651 is handled. Duration 207 ms by bot id=5771726025
+INFO:aiogram.event:Update id=191007653 is handled. Duration 5389 ms by bot id=5771726025
+INFO:aiogram.event:Update id=191007652 is handled. Duration 7317 ms by bot id=5771726025
+INFO:aiogram.event:Update id=191007654 is handled. Duration 3204 ms by bot id=5771726025
+INFO:bot.game:vikdem37 lost the game on round 2 at 2025-07-17 18:14:14
+INFO:aiogram.event:Update id=191007655 is handled. Duration 1422 ms by bot id=5771726025
+INFO:aiogram.event:Update id=191007656 is handled. Duration 3424 ms by bot id=5771726025
+INFO:aiogram.event:Update id=191007657 is handled. Duration 3213 ms by bot id=5771726025
+INFO:aiogram.event:Update id=191007658 is handled. Duration 3440 ms by bot id=5771726025
+INFO:aiogram.event:Update id=191007659 is handled. Duration 3434 ms by bot id=5771726025
+INFO:bot.game:vikdem37 lost the game on round 4 at 2025-07-17 18:17:51
+INFO:aiogram.event:Update id=191007660 is handled. Duration 1493 ms by bot id=5771726025
+INFO:aiogram.dispatcher:Polling stopped
+INFO:aiogram.dispatcher:Polling stopped for bot @testsubnum37_bot id=5771726025 - 'Test subject #37 bot'
+INFO:aiogram.dispatcher:Start polling
+INFO:aiogram.dispatcher:Run polling for bot @testsubnum37_bot id=5771726025 - 'Test subject #37 bot'
+INFO:aiogram.event:Update id=191007661 is handled. Duration 328 ms by bot id=5771726025
+INFO:aiogram.dispatcher:Polling stopped
+INFO:aiogram.dispatcher:Polling stopped for bot @testsubnum37_bot id=5771726025 - 'Test subject #37 bot'
+INFO:aiogram.dispatcher:Start polling
+INFO:aiogram.dispatcher:Run polling for bot @testsubnum37_bot id=5771726025 - 'Test subject #37 bot'
+INFO:aiogram.event:Update id=191007662 is handled. Duration 166 ms by bot id=5771726025
+INFO:aiogram.dispatcher:Polling stopped
+INFO:aiogram.dispatcher:Polling stopped for bot @testsubnum37_bot id=5771726025 - 'Test subject #37 bot'
+INFO:aiogram.dispatcher:Start polling
+INFO:aiogram.dispatcher:Run polling for bot @testsubnum37_bot id=5771726025 - 'Test subject #37 bot'
+INFO:aiogram.event:Update id=191007663 is handled. Duration 195 ms by bot id=5771726025

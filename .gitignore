@@ -1,2 +1,9 @@
 .env
 whocanbeamillionairetho.json
+compose.yml
+log.log
+Dockerfile
+bot/__pycache__/
+bot/.env
+README.Docker.md
+.venv/
