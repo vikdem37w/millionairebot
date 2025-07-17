@@ -21,7 +21,7 @@ async def setup_db():
         conn.commit()
     Table(
     'stats', meta,
-    Column('name', VARCHAR(35), primary_key=True),
+    Column('name', VARCHAR(35), primary_key=False),
     Column('correctcount', Integer),
     Column('result', Text),
     Column('creationdate', TIMESTAMP),

@@ -14,7 +14,7 @@ services:
       .
     ports:
       - 8000:8000
-    command: python simplifiedscambot.py
+    command: python main.py
     env_file:
       - .env
     volumes:
