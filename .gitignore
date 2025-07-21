@@ -5,3 +5,4 @@ bot/__pycache__/
 bot/.env
 README.Docker.md
 .venv/
+node_modules/

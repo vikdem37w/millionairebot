@@ -1,0 +1,23 @@
+{
+  "name": "millionairebot",
+  "version": "1.0.0",
+  "description": "A silly telegram bot to give you a false hope of becoming a millionaire.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vikdem37w/millionairebot.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/vikdem37w/millionairebot/issues"
+  },
+  "homepage": "https://github.com/vikdem37w/millionairebot#readme",
+  "dependencies": {
+    "pg": "^8.16.3"
+  }
+}
