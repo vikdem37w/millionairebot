@@ -34,14 +34,7 @@ async def setup_logger():
 
 
 async def is_admin(username):
-    if not adminlist:
-        try:
-            admincount = int(os.getenv("ADMINCOUNT"))
-        except ValueError:
-            admincount = 0
-        for i in range(admincount):
-            adminlist.append(os.getenv(f"ADMIN{i+1}"))
-    if username in adminlist:
+    if username in (os.getenv("ADMIN") or "").split(","):
         return "admin"
     else:
         return "normal"
