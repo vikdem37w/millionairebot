@@ -7,19 +7,8 @@
 # You can add other services your application may depend on here, such as a
 # database or a cache. For examples, see the Awesome Compose repository:
 # https://github.com/docker/awesome-compose
-services:
-  # migrate:
-  #   image: flyway/flyway:latest
-  #   entrypoint: ["flyway", "-url=jdbc:postgresql://db:5432/master", "-user=postgres", "-password=superuser", "-baselineOnMigrate=true", "migrate"] 
-  #   volumes:
-  #     - ./migrations:/app/migrations
-  #   depends_on:
-  #     - db
-  #   environment:
-  #     - POSTGRES_DB=${DB_NAME}
-  #     - POSTGRES_USER=${DB_USER}
-  #     - POSTGRES_PASSWORD=${DB_PASSWORD}
 
+services:
   server:
     working_dir: /app
     build:
@@ -27,8 +16,6 @@ services:
     ports:
       - 8000:8000
     command: sh -c "alembic upgrade head && python main.py"
-    # command: python main.py
-    # command: sh -c "alembic current && python main.py"
     env_file:
       - .env
     volumes:
@@ -50,8 +37,6 @@ services:
     user: postgres
     env_file:
       - .env
-    # secrets:
-    #   - db-password
     volumes:
       - db-data:/var/lib/postgresql/data
     environment:

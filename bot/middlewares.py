@@ -11,8 +11,8 @@ class Userware(BaseMiddleware):
         self,
         handler: Callable[[Message, Dict[str, Any]], Awaitable[Any]],
         event: Message,
-        data: Dict[str, Any]
+        data: Dict[str, Any],
     ) -> Any:
         self.username = event.from_user.username if event.from_user else "NULL"
-        data['username'] = self.username
+        data["username"] = self.username
         return await handler(event, data)
