@@ -1,9 +1,10 @@
 from dotenv import load_dotenv
 import os
 import logging
+import json
 
 load_dotenv()
-
+adminlist = []
 
 def get_token():
     token = os.getenv("BOT")
@@ -29,3 +30,21 @@ async def setup_logger():
     logger = logging.getLogger(__name__)
     logging.basicConfig(filename="log.log", level=logging.INFO)
     return logger
+
+async def is_admin(username):
+    if not adminlist:
+        try:
+            admincount = int(os.getenv("ADMINCOUNT"))
+        except:
+            admincount = 0
+        for i in range(admincount):
+            adminlist.append(os.getenv(f"ADMIN{i+1}"))
+    if username in adminlist:
+        return "admin"
+    else:
+        return "normal"
+
+async def json_question(question, options, answer):
+    questions = json.load(open("whocanbeamillionairetho.json"))
+    questions.append({"question": question, "options": options, "answer": answer})
+    json.dump(questions, open("whocanbeamillionairetho.json", "w"))

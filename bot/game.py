@@ -109,7 +109,7 @@ To view the leaderboard, type /leaderboard
 Press the button below to begin.""",
         reply_markup=builder.as_markup(),
     )
-    admin = await db_operations.is_admin(username)
+    admin = await settings.is_admin(username)
     await db_operations.add_user(username, chat_id, admin)
     if admin == "admin":
         admintxt = await msg.answer(
@@ -502,7 +502,7 @@ async def leaderboard_handler(msg: types.Message, username) -> None:
 async def addquestion(msg: types.Message, state: FSMContext, username) -> None:
     global last_interaction
     last_interaction = time.time()
-    admin = await db_operations.is_admin(username)
+    admin = await settings.is_admin(username)
     if admin == "admin":
         await state.set_state(Form.addq)
         await msg.answer(text="Enter the question:")
@@ -570,6 +570,7 @@ async def finishquestion(
             [data["option1"], data["option2"], data["option3"], data["option4"]],
             data["answer"],
         )
+        await settings.json_question(data["question"], [data["option1"], data["option2"], data["option3"], data["option4"]], data["answer"])
         builder = InlineKeyboardBuilder()
         builder.button(text="Start", callback_data="start")
         await callback.message.answer(
