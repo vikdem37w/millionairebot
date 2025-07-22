@@ -16,6 +16,10 @@ def get_connection():
     port = 5432
     return host, database, user, password, port
 
+def get_db_url():
+    host, database, user, password, port = get_connection()
+    return f"postgresql://{user}:{password}@{host}:{port}/{database}"
+
 async def setup_logger():
     logger = logging.getLogger(__name__)
     logging.basicConfig(filename="log.log", level=logging.INFO)
