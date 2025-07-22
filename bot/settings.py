@@ -6,6 +6,7 @@ import json
 load_dotenv()
 adminlist = []
 
+
 def get_token():
     token = os.getenv("BOT")
     aitoken = os.getenv("AI")
@@ -31,11 +32,12 @@ async def setup_logger():
     logging.basicConfig(filename="log.log", level=logging.INFO)
     return logger
 
+
 async def is_admin(username):
     if not adminlist:
         try:
             admincount = int(os.getenv("ADMINCOUNT"))
-        except:
+        except ValueError:
             admincount = 0
         for i in range(admincount):
             adminlist.append(os.getenv(f"ADMIN{i+1}"))
@@ -43,6 +45,7 @@ async def is_admin(username):
         return "admin"
     else:
         return "normal"
+
 
 async def json_question(question, options, answer):
     questions = json.load(open("whocanbeamillionairetho.json"))

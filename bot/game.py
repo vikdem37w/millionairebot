@@ -85,8 +85,8 @@ async def timeout(callback: types.CallbackQuery, state: FSMContext):
                     text="It's been a while, no?", reply_markup=ReplyKeyboardRemove()
                 )
                 f2 = await callback.message.answer(
-                    text="To upkeep server availability, we're forced to end your session prematurely. "\
-                        "\nPreviously earned money is lost. \nTo begin anew, press the button below.",
+                    text="To upkeep server availability, we're forced to end your session prematurely. "
+                    "\nPreviously earned money is lost. \nTo begin anew, press the button below.",
                     reply_markup=builder.as_markup(),
                 )
                 flavorcarryover = [f1, f2]
@@ -341,7 +341,7 @@ async def phoneafriend(msg: types.Message, state: FSMContext) -> None:
                 input="Your friend has just used a Phone a friend lifeline on a game show, and has decided to call you. "
                 f"The question is: {data['question']}. The options are: {data['options']}. Respond with a short answer, "
                 "giving them some information on the answer without saying the answer outright. "
-                "The answer must be helpful and help eliminate at least one option, "\
+                "The answer must be helpful and help eliminate at least one option, "
                 "with the answer only revealed with enough context known by the contestant to answer the question.",
             )
             phonetxt = await msg.answer(
@@ -391,8 +391,8 @@ async def asktheaudience(msg: types.Message, state: FSMContext) -> None:
         except Exception as e:
             logger.error(f"Ask the audience AI error raised: {e}")
             flavor = await msg.answer(
-                text="Our vote counting system ran into an issue, so the votes have been invalidated. "\
-                    "You'll have to answer without the audience's help"
+                text="Our vote counting system ran into an issue, so the votes have been invalidated. "
+                "You'll have to answer without the audience's help"
             )
             await asyncio.sleep(5)
             await flavor.delete()
@@ -570,7 +570,11 @@ async def finishquestion(
             [data["option1"], data["option2"], data["option3"], data["option4"]],
             data["answer"],
         )
-        await settings.json_question(data["question"], [data["option1"], data["option2"], data["option3"], data["option4"]], data["answer"])
+        await settings.json_question(
+            data["question"],
+            [data["option1"], data["option2"], data["option3"], data["option4"]],
+            data["answer"],
+        )
         builder = InlineKeyboardBuilder()
         builder.button(text="Start", callback_data="start")
         await callback.message.answer(
