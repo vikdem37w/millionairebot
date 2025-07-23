@@ -53,7 +53,7 @@ async def fill_leaderboard(username):
     leaderoutput = ["Leaderboard: \n"]
     for i in range(len(leaderboard)):
         leaderoutput.append(
-            f"{i+1}. {leaderboard[i][0]} {"won" if leaderboard[i][2] == "win" else "lost"} {reward[leaderboard[i][1]]}₴ on {leaderboard[i][3].strftime("%b %d %H:%M")}"
+            f"{i+1}. {leaderboard[i][0]} {'won' if leaderboard[i][2] == 'win' else 'lost'} {reward[leaderboard[i][1]]}₴ on {leaderboard[i][3].strftime('%b %d %H:%M')}"
         )
     if username != "NULL":
         userstats = (
@@ -66,7 +66,7 @@ async def fill_leaderboard(username):
         leaderoutput.append(f"\n\n{username}'s personal leaderboard:\n")
         for i in range(len(userstats)):
             leaderoutput.append(
-                f"{i+1}. You {"won" if userstats[i][2] == "win" else "lost"} {reward[userstats[i][1]]}₴ on {userstats[i][3].strftime("%b %d %H:%M")}"
+                f"{i+1}. You {'won' if userstats[i][2] == 'win' else 'lost'} {reward[userstats[i][1]]}₴ on {userstats[i][3].strftime('%b %d %H:%M')}"
             )
     return "\n".join(leaderoutput)
 
