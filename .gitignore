@@ -6,3 +6,4 @@ bot/.env
 README.Docker.md
 .venv/
 node_modules/
+.idea/

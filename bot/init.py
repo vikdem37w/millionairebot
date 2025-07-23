@@ -18,8 +18,6 @@ from sqlalchemy.orm import DeclarativeBase
 class Base(DeclarativeBase):
     metadata = MetaData()
 
-
-# Define tables with proper metadata registration
 questionstable = Table(
     "questions",
     Base.metadata,
@@ -50,7 +48,6 @@ userstable = Table(
 async def setup_db():
     engine = await db_engine()
     conn = await db_cursor()
-
     questions = select(questionstable)
     if not engine.dialect.has_table(conn, "questions") or len(conn.execute(questions).fetchall()) < len(json.load(open("whocanbeamillionairetho.json"))):
         Base.metadata.create_all(engine)
