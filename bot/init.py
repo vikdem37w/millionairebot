@@ -9,6 +9,7 @@ from sqlalchemy import (
     TIMESTAMP,
     ARRAY,
     insert,
+    select,
 )
 import json
 from sqlalchemy.orm import DeclarativeBase
@@ -19,7 +20,7 @@ class Base(DeclarativeBase):
 
 
 # Define tables with proper metadata registration
-questions_table = Table(
+questionstable = Table(
     "questions",
     Base.metadata,
     Column("question", Text),
@@ -27,7 +28,7 @@ questions_table = Table(
     Column("answer", Text),
 )
 
-stats_table = Table(
+statstable = Table(
     "stats",
     Base.metadata,
     Column("name", VARCHAR(35), primary_key=False),
@@ -36,7 +37,7 @@ stats_table = Table(
     Column("creationdate", TIMESTAMP),
 )
 
-users_table = Table(
+userstable = Table(
     "users",
     Base.metadata,
     Column("name", VARCHAR(35), primary_key=True),
@@ -45,18 +46,17 @@ users_table = Table(
     Column("creationdate", TIMESTAMP),
 )
 
-admin_table = Table("admin", Base.metadata, Column("name", VARCHAR(35)))
-
 
 async def setup_db():
     engine = await db_engine()
     conn = await db_cursor()
 
-    if not engine.dialect.has_table(conn, "questions"):
+    questions = select(questionstable)
+    if not engine.dialect.has_table(conn, "questions") or len(conn.execute(questions).fetchall()) < len(json.load(open("whocanbeamillionairetho.json"))):
         Base.metadata.create_all(engine)
         questions = json.load(open("whocanbeamillionairetho.json"))
         for i in questions:
-            cmt = insert(questions_table).values(
+            cmt = insert(questionstable).values(
                 question=i["question"], options=i["options"], answer=i["answer"]
             )
             conn.execute(cmt)

@@ -4,7 +4,6 @@ import logging
 import json
 
 load_dotenv()
-adminlist = []
 
 
 def get_token():
