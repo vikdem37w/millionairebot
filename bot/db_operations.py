@@ -71,16 +71,6 @@ async def fill_leaderboard(username):
     return "\n".join(leaderoutput)
 
 
-async def is_admin(username):
-    meta = MetaData()
-    adminstable = Table("admin", meta, autoload_with=engine)
-    admin = select(adminstable).where(adminstable.c.name == username)
-    if conn.execute(admin).fetchall():
-        return "admin"
-    else:
-        return "normal"
-
-
 async def add_user(username, chat_id, admin):
     meta = MetaData()
     userstable = Table("users", meta, autoload_with=engine)
