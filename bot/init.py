@@ -18,7 +18,6 @@ from sqlalchemy.orm import DeclarativeBase
 class Base(DeclarativeBase):
     metadata = MetaData()
 
-
 questionstable = Table(
     "questions",
     Base.metadata,
@@ -50,9 +49,7 @@ async def setup_db():
     engine = await db_engine()
     conn = await db_cursor()
     questions = select(questionstable)
-    if not engine.dialect.has_table(conn, "questions") or not list(
-        conn.execute(questions).fetchall()
-    ):
+    if not engine.dialect.has_table(conn, "questions") or len(conn.execute(questions).fetchall()) < len(json.load(open("whocanbeamillionairetho.json"))):
         Base.metadata.create_all(engine)
         questions = json.load(open("whocanbeamillionairetho.json"))
         for i in questions:
