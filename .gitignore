@@ -8,3 +8,4 @@ README.Docker.md
 node_modules/
 .idea/
 */__pycache__/
+*/*/__pycache__/
