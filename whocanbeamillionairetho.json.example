@@ -1,0 +1,5 @@
+[
+    {question:"question", options:["option 1", "option 2", "option 3", "option 4"], answer:"option 2"}
+    #Must contain at least 15 questions, >=100 recommended
+    #Answer must be one of the options
+]
